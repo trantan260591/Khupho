@@ -439,6 +439,8 @@ function parseSoNha(raw){
   if(!s){ r.err="trống"; return r; }
   if(s.startsWith("§DATE§")){ r.err="Excel đã đổi thành ngày"; return r; }
   s=s.replace(/^(SỐ NHÀ|SỐ|SN|NHÀ|NO\.?)\s*[:.]?\s*/,"").replace(/[\\]/g,"/").replace(/\s*\/\s*/g,"/").replace(/[.,;]+$/,"").trim();
+  if(/^(KS|K\.S|KHÔNG SỐ|NHÀ KHÔNG SỐ|KO SỐ)$/.test(s)){ r.ok=true; r.kind="ks"; r.canon="KS"; r.parts=[{n:0,s:"KS"}]; r.goc=0; return r; }
+  if(/^(ĐT|ĐẤT TRỐNG)$/.test(s)){ r.ok=true; r.kind="ks"; r.canon="ĐT"; r.parts=[{n:0,s:"ĐT"}]; r.goc=0; return r; }
   const lo=s.match(/^(LÔ|LO|KIỐT|KIOT|KI-ỐT|KIOSK|K)\s*[-.]?\s*([A-Z]{0,2}\s*\d+[A-Z]?)$/);
   if(lo){
     const code=lo[2].replace(/\s+/g,"");
@@ -453,7 +455,7 @@ function parseSoNha(raw){
   }
   const segs=s.split("/");
   for(const seg of segs){
-    const m=seg.trim().replace(/\s+/g,"").match(/^(\d+)([A-Z]{0,3})$/);
+    const m=seg.trim().replace(/\s+/g,"").match(/^(\d+)([A-Z]{0,3}\d{0,2})$/);
     if(!m){ r.err=`không đọc được “${seg||"/"}”`; return r; }
     let suf=m[2]; if(suf==="BIS"||suf==="TER") suf=suf; // giữ nguyên 12BIS
     r.parts.push({n:parseInt(m[1],10), s:suf});
@@ -581,7 +583,7 @@ function runChecks(){
       const label={soCu:"số cũ",soMoi:"số mới",thuaCu:"thửa cũ",thuaMoi:"thửa mới",toCu:"tờ cũ",toMoi:"tờ mới"}[f]||f;
       add(r,"err","EXCEL_DATE",`Excel đã tự đổi ô ${label} thành NGÀY THÁNG (app đoán là “${r[f]}”). Kiểm tra lại số gốc rồi sửa.`,false);
     });
-    if(!r.soMoi.trim()) add(r,"err","MOI_TRONG","Chưa có số nhà mới",true);
+    if(!r.soMoi.trim()) add(r,"err","MOI_TRONG",r.soCu.trim()?"Có số cũ nhưng chưa có số nhà mới (nhà đã nhập lô / giải toả? — kiểm tra thực địa)":"Chưa có số nhà mới",!r.soCu.trim());
     else if(!moi.ok) add(r,"err","MOI_SAI",`Số mới không đọc được: ${moi.err}`,true);
     if(!r.soCu.trim()) add(r,"warn","CU_TRONG","Không có số nhà cũ (nhà mới xây / mới tách?)");
     else if(!cu.ok) add(r,"err","CU_SAI",`Số cũ không đọc được: ${cu.err}`,true);
@@ -593,14 +595,17 @@ function runChecks(){
   // --- 2. Trùng số ---
   const byCu=new Map(), byMoi=new Map();
   I.forEach(x=>{
-    if(x.cu.ok){ const k=x.st+"|"+x.cu.canon; (byCu.get(k)||byCu.set(k,[]).get(k)).push(x); }
-    if(x.moi.ok){ const k=x.st+"|"+x.moi.canon; (byMoi.get(k)||byMoi.set(k,[]).get(k)).push(x); }
+    if(x.cu.ok&&x.cu.kind!=="ks"){ const k=x.st+"|"+x.cu.canon; (byCu.get(k)||byCu.set(k,[]).get(k)).push(x); }
+    if(x.moi.ok&&x.moi.kind!=="ks"){ const k=x.st+"|"+x.moi.canon; (byMoi.get(k)||byMoi.set(k,[]).get(k)).push(x); }
   });
   byCu.forEach(list=>{
     if(list.length<2) return;
     const moiSet=new Set(list.map(x=>x.moi.ok?x.moi.canon:"?"));
     if(moiSet.size>1 && !list.every(x=>x.r.tach)){
-      list.forEach(x=>add(x.r,"err","CU_TRUNG",`Số cũ ${x.cu.canon} xuất hiện ${list.length} lần với các số mới khác nhau (${[...moiSet].join(", ")}). Nếu nhà cũ đã tách thành nhiều căn, đánh dấu “Tách”.`));
+      const okMoi=list.filter(x=>x.moi.ok);
+      const fam=new Set(okMoi.map(x=>x.moi.parts.length>1?prefixCanon(x.moi):String(x.moi.goc)));
+      const sibling=okMoi.length===list.length && fam.size===1;
+      list.forEach(x=>add(x.r,sibling?"warn":"err","CU_TRUNG",`Số cũ ${x.cu.canon} xuất hiện ${list.length} lần với các số mới khác nhau (${[...moiSet].join(", ")}). Nếu nhà cũ đã tách thành nhiều căn, đánh dấu “Tách”.`));
     }else if(moiSet.size===1){
       list.slice(1).forEach(x=>add(x.r,"warn","DONG_LAP",`Dòng lặp: số cũ ${x.cu.canon} → ${x.moi.canon} đã có ở dòng khác`));
     }
@@ -616,7 +621,7 @@ function runChecks(){
   // --- 3. Chẵn/lẻ, thứ tự, nhảy số trên trục đường chính ---
   const mainByStreet=new Map();
   I.forEach(x=>{
-    if(x.cu.ok&&x.moi.ok&&x.cu.parts.length===1&&x.moi.parts.length===1&&x.cu.kind!=="lo"&&x.moi.kind!=="lo"){
+    if(x.cu.ok&&x.moi.ok&&x.cu.parts.length===1&&x.moi.parts.length===1&&x.cu.kind==="so"&&x.moi.kind==="so"){
       (mainByStreet.get(x.st)||mainByStreet.set(x.st,[]).get(x.st)).push(x);
     }
   });
@@ -648,7 +653,7 @@ function runChecks(){
   // --- 4. Hẻm / số phụ: các nhà trong cùng hẻm cũ phải sang cùng hẻm mới, đúng thứ tự ---
   const byOldAlley=new Map();
   I.forEach(x=>{
-    if(x.cu.ok&&x.moi.ok&&x.cu.parts.length>=2){
+    if(x.cu.ok&&x.moi.ok&&x.cu.parts.length>=2&&x.moi.kind!=="ks"){
       const k=x.st+"|"+prefixCanon(x.cu); (byOldAlley.get(k)||byOldAlley.set(k,[]).get(k)).push(x);
     }
   });
@@ -658,7 +663,7 @@ function runChecks(){
     list.forEach(x=>{ const np=x.moi.parts.length>=2?prefixCanon(x.moi):"(số chính)"; count.set(np,(count.get(np)||0)+1); });
     const majority=[...count.entries()].sort((a,b)=>b[1]-a[1])[0][0];
     if(count.size>1){
-      list.forEach(x=>{ const np=x.moi.parts.length>=2?prefixCanon(x.moi):"(số chính)"; if(np!==majority) add(x.r,"err","HEM_LECH",`Hẻm cũ ${oldPrefix}: đa số nhà đổi sang hẻm ${majority}, riêng nhà này (${x.cu.canon}) sang ${np}`); });
+      list.forEach(x=>{ const np=x.moi.parts.length>=2?prefixCanon(x.moi):"(số chính)"; if(np!==majority) add(x.r,"warn","HEM_LECH",`Hẻm cũ ${oldPrefix}: đa số nhà đổi sang hẻm ${majority}, riêng nhà này (${x.cu.canon}) sang ${np} — hẻm được tổ chức lại hay ghi nhầm?`); });
     }
     const parent=byCu.get(k.split("|")[0]+"|"+oldPrefix);
     if(parent&&parent.length===1&&parent[0].moi.ok&&majority!=="(số chính)"){
@@ -671,7 +676,7 @@ function runChecks(){
       const seq=sorted.map(x=>x.moi);
       const inc=lisIndices(seq,cmpSoNha), dec=lisIndices(seq,(a,b)=>cmpSoNha(b,a));
       const keep=dec.size>inc.size?dec:inc;
-      sorted.forEach((x,i)=>{ if(!keep.has(i)) add(x.r,"err","THU_TU_HEM",`Sai thứ tự trong hẻm ${oldPrefix}: ${x.cu.canon} → ${x.moi.canon}`); });
+      sorted.forEach((x,i)=>{ if(!keep.has(i)) add(x.r,"warn","THU_TU_HEM",`Sai thứ tự trong hẻm ${oldPrefix}: ${x.cu.canon} → ${x.moi.canon}`); });
     }
   });
 
