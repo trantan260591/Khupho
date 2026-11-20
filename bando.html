@@ -235,7 +235,19 @@ function todayVN(){
   const d=new Date(); const p=n=>String(n).padStart(2,"0");
   return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
-function downloadBlob(blob, filename){
+/* Trong khung claude.ai: tải file qua quyền "downloads" (người xem xác nhận); ngoài ra dùng liên kết tải thường */
+let dlCapPromise=null;
+function getDownloadsCap(){
+  if(!dlCapPromise) dlCapPromise=(window.claude&&typeof window.claude.use==="function")?window.claude.use("downloads").catch(()=>null):Promise.resolve(null);
+  return dlCapPromise;
+}
+async function downloadBlob(blob, filename){
+  const cap=await getDownloadsCap();
+  if(cap){
+    try{ await cap.save({filename, data:blob}); showToast("✅ Đã lưu "+filename); }
+    catch(e){ if(e&&e.code!=="declined") showToast("⚠️ Không lưu được file ("+(e&&e.code||"lỗi")+")"); }
+    return;
+  }
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob); a.download=filename;
   document.body.appendChild(a); a.click();
@@ -1012,6 +1024,14 @@ function confirmItem(key){
     closeSheet(); saveProject(); runChecks(); renderAll();
   };
 }
+function askConfirm(msg, okText){
+  return new Promise(res=>{
+    openSheet(`<h2>Xác nhận</h2><p style="white-space:pre-line">${escapeHtml(msg)}</p>
+      <div class="row" style="margin-top:10px"><button class="btn danger" id="acOk">${escapeHtml(okText||"Đồng ý")}</button><button class="btn" id="acNo">Huỷ</button></div>`);
+    $("#acOk").onclick=()=>{ closeSheet(); res(true); };
+    $("#acNo").onclick=()=>{ closeSheet(); res(false); };
+  });
+}
 function openSheet(html){ $("#sheet").innerHTML=html; $("#overlay").classList.add("show"); }
 function closeSheet(){ $("#overlay").classList.remove("show"); }
 $("#overlay").addEventListener("click",e=>{ if(e.target.id==="overlay") closeSheet(); });
@@ -1037,7 +1057,7 @@ function openRowEditor(id){
     if(isNew){ r.src="Nhập thủ công "+todayVN(); P.rows.push(r); }
     closeSheet(); saveProject(); runChecks(); renderAll();
   };
-  if(!isNew) $("#edDel").onclick=()=>{ if(!confirm("Xoá dòng này?")) return; P.rows=P.rows.filter(x=>x.id!==r.id); delete P.confirms["R|"+r.id]; closeSheet(); saveProject(); runChecks(); renderAll(); };
+  if(!isNew) $("#edDel").onclick=async()=>{ if(!(await askConfirm("Xoá dòng này khỏi bảng?","Xoá dòng"))) return; P.rows=P.rows.filter(x=>x.id!==r.id); delete P.confirms["R|"+r.id]; closeSheet(); saveProject(); runChecks(); renderAll(); };
 }
 
 async function exportChecked(){
@@ -1445,7 +1465,7 @@ function renderImportSummary(){
   $("#parcelSummary").innerHTML=(pc.cu||pc.moi)?`Đã nạp: ${pc.moi} thửa bản đồ mới, ${pc.cu} thửa bản đồ cũ. <button class="btn small danger" id="btnClearParcels">Xoá danh sách thửa</button>
     ${["moi","cu"].filter(k=>pc[k]).map(k=>`<div><label><input type="checkbox" data-pcomplete="${k}" ${pcx[k]?"checked":""}> Danh sách thửa bản đồ ${k==="cu"?"cũ":"mới"} là ĐẦY ĐỦ cả khu phố (báo những nhà có thửa không nằm trong danh sách)</label></div>`).join("")}`:"";
   $$("#parcelSummary [data-pcomplete]").forEach(c=>c.addEventListener("change",()=>{ pcx[c.dataset.pcomplete]=c.checked; saveProject(); runChecks(); renderAll(); }));
-  $("#btnClearParcels")?.addEventListener("click",()=>{ if(confirm("Xoá toàn bộ danh sách thửa đã nạp?")){ P.parcels=[]; saveProject(); runChecks(); renderAll(); } });
+  $("#btnClearParcels")?.addEventListener("click",async()=>{ if(await askConfirm("Xoá toàn bộ danh sách thửa đã nạp?","Xoá")){ P.parcels=[]; saveProject(); runChecks(); renderAll(); } });
 }
 function renderProjectInfo(){ $("#projInfo").textContent=P.savedAt?`Lưu lần cuối trên máy này: ${P.savedAt} · ${P.rows.length} nhà · ${Object.keys(P.confirms).length} xác nhận`:"Chưa có dữ liệu được lưu."; }
 function renderAll(){
@@ -1480,22 +1500,28 @@ $("#mapSearch").addEventListener("keydown",e=>{ if(e.key==="Enter") mapSearch();
 $("#mapZoomIn").addEventListener("click",()=>zoom(1/1.3));
 $("#mapZoomOut").addEventListener("click",()=>zoom(1.3));
 $("#mapFit").addEventListener("click",fitView);
-$("#mapResetLayout").addEventListener("click",()=>{ if(!confirm("Xếp lại toàn bộ bản đồ về vị trí mặc định? Cách bố trí đã kéo thả sẽ mất.")) return; P.layout={}; buildMapGroups(); P.layout=defaultLayout(); saveProject(); renderMap(); fitView(); });
+$("#mapResetLayout").addEventListener("click",async()=>{ if(!(await askConfirm("Xếp lại toàn bộ bản đồ về vị trí mặc định? Cách bố trí đã kéo thả sẽ mất.","Xếp lại"))) return; P.layout={}; buildMapGroups(); P.layout=defaultLayout(); saveProject(); renderMap(); fitView(); });
 $("#mapSvgBtn").addEventListener("click",exportSvg);
 $("#mapPngBtn").addEventListener("click",exportPng);
 $("#mapPrintBtn").addEventListener("click",printMap);
+if(window.self!==window.top) $("#mapPrintBtn").hidden=true;
 $("#btnProjExport").addEventListener("click",()=>{ const o={...P}; delete o._fitted; downloadBlob(new Blob([JSON.stringify(o,null,1)],{type:"application/json"}),`du_an_ban_do_so_nha_${new Date().toISOString().slice(0,10)}.json`); });
 $("#fileProj").addEventListener("change",async e=>{
   const f=e.target.files[0]; if(!f) return;
   try{ const o=JSON.parse(await f.text()); if(!o||o.version!==1||!Array.isArray(o.rows)) throw new Error("File không phải dự án bản đồ số nhà");
-    if(P.rows.length && !confirm("Thay dự án hiện có trên máy này bằng file vừa chọn?")) return;
+    if(P.rows.length && !(await askConfirm("Thay dự án hiện có trên máy này bằng file vừa chọn?","Thay"))) return;
     P=Object.assign(newProject(),o); saveProject(); runChecks(); renderAll(); showToast("✅ Đã nhập dự án");
   }catch(err){ showToast("❌ "+err.message); }
   e.target.value="";
 });
-$("#btnProjClear").addEventListener("click",()=>{ if(!confirm("Xoá toàn bộ bảng số nhà, danh sách thửa, xác nhận và bố trí bản đồ trên máy này?")) return; P=newProject(); try{ localStorage.removeItem(PROJECT_KEY); }catch(e){} runChecks(); renderAll(); });
+$("#btnProjClear").addEventListener("click",async()=>{ if(!(await askConfirm("Xoá toàn bộ bảng số nhà, danh sách thửa, xác nhận và bố trí bản đồ trên máy này?","Xoá hết"))) return; P=newProject(); try{ localStorage.removeItem(PROJECT_KEY); }catch(e){} runChecks(); renderAll(); });
 
 loadProject();
+if(!P.rows.length && Array.isArray(window.SEED_ROWS) && window.SEED_ROWS.length){
+  window.SEED_ROWS.forEach(o=>P.rows.push(makeRow(o)));
+  P.sourceName=window.SEED_NAME||"Dữ liệu nạp sẵn";
+  saveProject();
+}
 runChecks();
 renderAll();
 </script>
