@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bản đồ số nhà KP10</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<style>
+  :root{
+    --navy:#1e3a5f; --navy-dark:#132840; --accent:#c9a227; --bg:#f4f6f8;
+    --card:#ffffff; --line:#e2e6ea; --text:#22303e; --muted:#6b7787;
+    --green:#2f7d4f; --red:#c0392b; --amber:#b5820a; --blue:#2c5d8f;
+    --ok-bg:#e8f5ec; --warn-bg:#fff4d6; --err-bg:#fde2df; --conf-bg:#e3edf8;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px;}
+  header{background:linear-gradient(135deg,var(--navy),var(--navy-dark));color:#fff;padding:14px 16px;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.15);}
+  header h1{margin:0;font-size:1.08rem;font-weight:700;}
+  header p{margin:2px 0 0;font-size:.76rem;color:#c7d3e0;}
+  header a{color:#ffe38a;text-decoration:none;font-size:.78rem;}
+  .hrow{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 0;background:var(--bg);position:sticky;top:58px;z-index:15;}
+  nav.tabs button{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--navy);padding:8px 12px;border-radius:10px 10px 0 0;font-weight:600;font-size:.86rem;cursor:pointer;}
+  nav.tabs button.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  nav.tabs .badge{display:inline-block;min-width:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff;font-size:.7rem;margin-left:4px;}
+  main{padding:12px 16px 60px;max-width:1300px;margin:0 auto;}
+  section.tab{display:none;} section.tab.active{display:block;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;}
+  .card h2{margin:0 0 8px;font-size:1rem;color:var(--navy);}
+  .card h3{margin:12px 0 6px;font-size:.92rem;color:var(--navy);}
+  .muted{color:var(--muted);font-size:.84rem;}
+  .btn{border:1px solid var(--navy);background:#fff;color:var(--navy);padding:8px 12px;border-radius:9px;font-weight:600;cursor:pointer;font-size:.86rem;}
+  .btn.primary{background:var(--navy);color:#fff;}
+  .btn.danger{border-color:var(--red);color:var(--red);}
+  .btn.small{padding:4px 8px;font-size:.78rem;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  input[type=text],input[type=password],select,textarea{border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:.88rem;font-family:inherit;background:#fff;color:var(--text);max-width:100%;}
+  textarea{width:100%;}
+  label.fld{display:flex;flex-direction:column;gap:3px;font-size:.8rem;color:var(--muted);}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;}
+  table{border-collapse:collapse;width:100%;font-size:.84rem;}
+  th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;}
+  th{background:#eef2f6;color:var(--navy);position:sticky;top:0;white-space:nowrap;}
+  tr.st-err td{background:var(--err-bg);} tr.st-warn td{background:var(--warn-bg);} tr.st-conf td{background:var(--conf-bg);}
+  .pill{display:inline-block;padding:1px 7px;border-radius:9px;font-size:.74rem;font-weight:700;white-space:nowrap;}
+  .pill.ok{background:var(--ok-bg);color:var(--green);} .pill.warn{background:var(--warn-bg);color:var(--amber);}
+  .pill.err{background:var(--err-bg);color:var(--red);} .pill.conf{background:var(--conf-bg);color:var(--blue);}
+  .issues{margin:0;padding-left:16px;font-size:.78rem;} .issues li.err{color:var(--red);} .issues li.warn{color:var(--amber);}
+  .stats{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 12px;cursor:pointer;min-width:110px;}
+  .stat b{display:block;font-size:1.3rem;} .stat span{font-size:.76rem;color:var(--muted);}
+  .stat.active{outline:2px solid var(--navy);}
+  .banner{padding:10px 12px;border-radius:10px;margin-bottom:10px;font-size:.88rem;font-weight:600;}
+  .banner.ok{background:var(--ok-bg);color:var(--green);border:1px solid #b9dcc6;}
+  .banner.bad{background:var(--err-bg);color:var(--red);border:1px solid #f1b8b1;}
+  .banner.info{background:var(--conf-bg);color:var(--blue);border:1px solid #bcd0e6;}
+  #mapWrap{position:relative;background:#fafbfc;border:1px solid var(--line);border-radius:12px;height:72vh;overflow:hidden;}
+  #mapSvg{width:100%;height:100%;touch-action:none;user-select:none;-webkit-user-select:none;display:block;}
+  td.col-issues{min-width:280px;}
+  @media (max-width:700px){
+    header{position:static;}
+    nav.tabs{top:0;padding-top:8px;}
+    main{padding:10px 12px 60px;}
+    .stat{min-width:0;flex:1 1 40%;}
+  }
+  .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.76rem;color:var(--muted);margin-top:6px;}
+  .legend i{display:inline-block;width:14px;height:12px;border-radius:3px;vertical-align:middle;margin-right:4px;border:1px solid #999;}
+  .overlay{position:fixed;inset:0;background:rgba(10,20,35,.45);display:none;align-items:flex-end;justify-content:center;z-index:50;}
+  .overlay.show{display:flex;}
+  .sheet{background:#fff;width:100%;max-width:620px;max-height:90vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px;}
+  @media (min-width:700px){ .overlay{align-items:center;} .sheet{border-radius:16px;} }
+  .toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--navy-dark);color:#fff;padding:10px 16px;border-radius:10px;font-size:.86rem;opacity:0;pointer-events:none;transition:opacity .25s;z-index:60;max-width:90vw;}
+  .toast.show{opacity:1;}
+  .map-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:8px;}
+  .map-tools label{font-size:.8rem;display:flex;gap:3px;align-items:center;}
+  details summary{cursor:pointer;color:var(--navy);font-weight:600;font-size:.86rem;}
+  @media print{
+    body.print-map header, body.print-map nav, body.print-map .no-print, body.print-map .card:not(#mapCard){display:none !important;}
+    body.print-map section.tab{display:none !important;} body.print-map #tab-map{display:block !important;}
+    body.print-map #mapCard{border:none;padding:0;} body.print-map #mapWrap{height:auto;border:none;}
+    body.print-map #mapSvg{height:auto;width:100%;}
+    body.print-map main{padding:0;max-width:none;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div>
+      <h1>🗺️ Bản đồ số nhà cũ – mới</h1>
+      <p>Khu phố 10 — đối chiếu bảng số nhà, số thửa và hộ dân · chạy offline</p>
+    </div>
+    <a href="index.html">← App nhân hộ khẩu</a>
+  </div>
+</header>
+<nav class="tabs">
+  <button data-tab="import" class="active">1. Nhập dữ liệu</button>
+  <button data-tab="check">2. Kiểm tra sai sót <span class="badge" id="badgeIssues" style="display:none"></span></button>
+  <button data-tab="hh">3. Đối chiếu hộ</button>
+  <button data-tab="map">4. Bản đồ</button>
+  <button data-tab="project">Lưu / chuyển máy</button>
+</nav>
+<main>
+
+<!-- ================= TAB 1: NHẬP ================= -->
+<section class="tab active" id="tab-import">
+  <div class="card">
+    <h2>Bảng đối chiếu số nhà cũ → mới</h2>
+    <p class="muted">Chọn file Excel (.xlsx) hoặc .csv. Mỗi dòng là một căn nhà: tên đường/hẻm, số cũ, số mới; có thể thêm tờ bản đồ và số thửa (cũ/mới) để đối chiếu chính xác hơn. Nếu tên đường chỉ ghi một lần ở đầu nhóm, app tự điền xuống các dòng bên dưới.</p>
+    <div class="row">
+      <input type="file" id="fileMain" accept=".xlsx,.csv,.txt">
+      <button class="btn" id="btnTemplate">⬇️ Tải file Excel mẫu</button>
+      <button class="btn" id="btnAddRow">➕ Thêm nhà thủ công</button>
+    </div>
+    <div id="mapperMain"></div>
+  </div>
+  <div class="card">
+    <h2>Danh sách thửa đất (không bắt buộc)</h2>
+    <p class="muted">Nếu có danh sách thửa lấy từ bản đồ địa chính (mỗi dòng: tờ, thửa, số nhà ghi trên thửa, tên đường), nạp vào đây để app kiểm tra chéo với bảng số nhà. Có thể nạp riêng cho bản đồ cũ và bản đồ mới.</p>
+    <div class="row">
+      <select id="parcelMapType"><option value="moi">Thửa theo bản đồ MỚI (so với số nhà mới)</option><option value="cu">Thửa theo bản đồ CŨ (so với số nhà cũ)</option></select>
+      <input type="file" id="fileParcel" accept=".xlsx,.csv,.txt">
+    </div>
+    <div id="mapperParcel"></div>
+    <div id="parcelSummary" class="muted" style="margin-top:6px"></div>
+  </div>
+  <div class="card" id="importSummary"></div>
+</section>
+
+<!-- ================= TAB 2: KIỂM TRA ================= -->
+<section class="tab" id="tab-check">
+  <div id="finalBanner"></div>
+  <div class="stats" id="checkStats"></div>
+  <div class="card">
+    <div class="row" style="margin-bottom:8px">
+      <input type="text" id="checkSearch" placeholder="🔍 Tìm số cũ, số mới, đường, thửa..." style="flex:1;min-width:180px">
+      <select id="checkStreet"><option value="">Tất cả tuyến</option></select>
+      <button class="btn small" id="btnExportChecked">⬇️ Xuất Excel bảng đã kiểm tra</button>
+    </div>
+    <div class="tbl-wrap"><table id="checkTable"></table></div>
+    <div class="row" style="margin-top:8px"><button class="btn small" id="checkMore" style="display:none">Hiện thêm</button><span class="muted" id="checkCount"></span></div>
+  </div>
+  <div class="card" id="parcelIssuesCard" style="display:none">
+    <h2>Thửa trong danh sách thửa cần xem</h2>
+    <div class="tbl-wrap"><table id="parcelIssuesTable"></table></div>
+  </div>
+</section>
+
+<!-- ================= TAB 3: ĐỐI CHIẾU HỘ ================= -->
+<section class="tab" id="tab-hh">
+  <div class="card">
+    <h2>Đối chiếu với hộ trong app nhân hộ khẩu</h2>
+    <p class="muted">Dữ liệu hộ được giải mã bằng mật khẩu của app nhân hộ khẩu và <b>chỉ nằm trong bộ nhớ trang này</b> — không lưu lại, không gửi đi đâu. Đóng trang hoặc bấm “Khoá” là xoá.</p>
+    <div id="hhSourceLocal" class="muted" style="margin:6px 0"></div>
+    <details id="hhPasteBox"><summary>Hoặc dán / chọn file bản sao lưu (backup_ma_hoa.txt từ nút 💾)</summary>
+      <textarea id="hhBackup" rows="3" placeholder='{"salt":"...","iv":"...","ct":"...","iterations":600000}' style="margin-top:6px"></textarea>
+      <input type="file" id="hhBackupFile" accept=".txt,.json">
+    </details>
+    <div class="row" style="margin-top:8px">
+      <input type="password" id="hhPassword" placeholder="Mật khẩu app nhân hộ khẩu" autocomplete="current-password">
+      <button class="btn primary" id="btnHhUnlock">🔓 Giải mã và đối chiếu</button>
+      <button class="btn danger" id="btnHhLock" style="display:none">🔒 Khoá (xoá khỏi bộ nhớ)</button>
+    </div>
+    <div id="hhMsg" class="muted" style="margin-top:6px"></div>
+  </div>
+  <div id="hhResult"></div>
+</section>
+
+<!-- ================= TAB 4: BẢN ĐỒ ================= -->
+<section class="tab" id="tab-map">
+  <div class="card" id="mapCard">
+    <div id="mapBanner" class="no-print"></div>
+    <div class="map-tools no-print">
+      <label><input type="checkbox" id="lblMoi" checked> Số mới</label>
+      <label><input type="checkbox" id="lblCu" checked> Số cũ</label>
+      <label><input type="checkbox" id="lblThua" checked> Tờ/thửa</label>
+      <label><input type="checkbox" id="lblHh" checked> Hộ dân</label>
+      <input type="text" id="mapSearch" placeholder="🔍 Số nhà cũ/mới hoặc thửa" style="width:170px">
+      <button class="btn small" id="mapZoomIn">＋</button>
+      <button class="btn small" id="mapZoomOut">－</button>
+      <button class="btn small" id="mapFit">⤢ Vừa khung</button>
+      <button class="btn small" id="mapResetLayout">↺ Xếp lại</button>
+      <button class="btn small" id="mapSvgBtn">⬇️ SVG</button>
+      <button class="btn small" id="mapPngBtn">⬇️ PNG</button>
+      <button class="btn small" id="mapPrintBtn">🖨️ In</button>
+    </div>
+    <div id="mapWrap"><svg id="mapSvg" xmlns="http://www.w3.org/2000/svg"></svg></div>
+    <div class="legend no-print">
+      <span><i style="background:var(--ok-bg)"></i>Hợp lệ</span>
+      <span><i style="background:var(--warn-bg)"></i>Cần xem</span>
+      <span><i style="background:var(--err-bg)"></i>Lỗi</span>
+      <span><i style="background:var(--conf-bg)"></i>Đã xác nhận thực địa</span>
+      <span>● có hộ (số = số hộ) · viền đứt = không có hộ nào</span>
+      <span>Kéo thanh tên tuyến để di chuyển · nút ⟳ để xoay · kéo nền để cuộn · bấm vào nhà để sửa</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TAB 5: DỰ ÁN ================= -->
+<section class="tab" id="tab-project">
+  <div class="card">
+    <h2>Lưu và chuyển sang máy khác</h2>
+    <p class="muted">Bảng số nhà, các xác nhận thực địa và cách bố trí bản đồ được tự lưu trên trình duyệt này. Muốn chuyển sang máy khác thì xuất file dự án rồi nhập ở máy kia. File dự án <b>không</b> chứa dữ liệu nhân khẩu.</p>
+    <div class="row">
+      <button class="btn primary" id="btnProjExport">⬇️ Xuất file dự án (.json)</button>
+      <input type="file" id="fileProj" accept=".json">
+      <button class="btn danger" id="btnProjClear">🗑️ Xoá toàn bộ dự án trên máy này</button>
+    </div>
+    <p class="muted" id="projInfo"></p>
+  </div>
+</section>
+</main>
+
+<div class="overlay" id="overlay"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   PHẦN 1 — TIỆN ÍCH CHUNG
+   ===================================================================== */
+const $ = (s, el=document)=>el.querySelector(s);
+const $$ = (s, el=document)=>Array.from(el.querySelectorAll(s));
+function escapeHtml(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+let toastTimer=null;
+function showToast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove("show"),2600);
+}
+function todayVN(){
+  const d=new Date(); const p=n=>String(n).padStart(2,"0");
+  return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function downloadBlob(blob, filename){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},1500);
+}
+/* Giống hệt normalizeAddress() trong index.html — để so sánh địa chỉ cùng một cách */
+function normalizeAddress(s){
+  return String(s||"")
+    .toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g,"")
+    .replace(/đ/g,"d")
+    .replace(/[^a-z0-9]+/g," ")
+    .trim();
+}
+/* Khoá so sánh tên đường: bỏ chữ "đường"/"đ." ở đầu, giữ nguyên "hẻm" vì hẻm khác đường */
+function streetKey(s){
+  return normalizeAddress(s).replace(/^(duong|d)\s+/,"").trim();
+}
+
+/* =====================================================================
+   PHẦN 2 — ĐỌC / GHI EXCEL (không cần thư viện ngoài)
+   Bộ đọc ZIP lấy từ index.html (ct12kv8_unzip / ct12kv8_inflateRaw), bộ ghi
+   lấy từ tính năng "Xuất Excel" (crc32, xlsxSheetXml, xlsxZipStore).
+   ===================================================================== */
+async function inflateRaw(bytes){
+  if(typeof DecompressionStream==="undefined") throw new Error("Trình duyệt không hỗ trợ giải nén — vui lòng dùng Chrome/Edge/Safari bản mới");
+  const ds=new DecompressionStream("deflate-raw");
+  const w=ds.writable.getWriter(); w.write(bytes); w.close();
+  return new Uint8Array(await new Response(ds.readable).arrayBuffer());
+}
+async function unzip(bytes){
+  const dv=new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  let eocd=-1;
+  for(let i=bytes.length-22;i>=Math.max(0,bytes.length-65557);i--){ if(dv.getUint32(i,true)===0x06054b50){eocd=i;break;} }
+  if(eocd<0) throw new Error("File không phải .xlsx hợp lệ (không đọc được cấu trúc ZIP)");
+  const count=dv.getUint16(eocd+10,true); let p=dv.getUint32(eocd+16,true);
+  const files={}; const dec=new TextDecoder("utf-8");
+  for(let i=0;i<count;i++){
+    if(dv.getUint32(p,true)!==0x02014b50) throw new Error("File .xlsx bị hỏng");
+    const method=dv.getUint16(p+10,true), csize=dv.getUint32(p+20,true);
+    const nl=dv.getUint16(p+28,true), el=dv.getUint16(p+30,true), cl=dv.getUint16(p+32,true);
+    const lo=dv.getUint32(p+42,true);
+    const name=dec.decode(bytes.subarray(p+46,p+46+nl));
+    p+=46+nl+el+cl;
+    const start=lo+30+dv.getUint16(lo+26,true)+dv.getUint16(lo+28,true);
+    const comp=bytes.subarray(start,start+csize);
+    if(method===0) files[name]=comp.slice();
+    else if(method===8) files[name]=await inflateRaw(comp);
+    else throw new Error("Kiểu nén không hỗ trợ: "+method);
+  }
+  return files;
+}
+function xmlDoc(u8){ return new DOMParser().parseFromString(new TextDecoder("utf-8").decode(u8),"application/xml"); }
+function colIndex(ref){ const m=ref.match(/^([A-Z]+)/); let n=0; for(const ch of m[1]) n=n*26+(ch.charCodeAt(0)-64); return n-1; }
+const BUILTIN_DATE_FMTS=new Set([14,15,16,17,18,19,20,21,22,27,28,29,30,31,32,33,34,35,36,45,46,47,50,51,52,53,54,55,56,57,58]);
+
+/* Đọc toàn bộ workbook: trả về [{name, rows:[[str]], dates:Set("r,c")}]
+   dates = các ô Excel đã TỰ ĐỔI thành ngày tháng (vd gõ 12/3 bị thành 12/03/2025) — phải cảnh báo */
+async function readXlsx(bytes){
+  const files=await unzip(bytes);
+  const get=n=>files[n]||files[n.replace(/^\//,"")];
+  let shared=[];
+  if(get("xl/sharedStrings.xml")){
+    const d=xmlDoc(get("xl/sharedStrings.xml"));
+    shared=Array.from(d.getElementsByTagName("si")).map(si=>Array.from(si.getElementsByTagName("t")).map(t=>t.textContent).join(""));
+  }
+  const dateStyles=new Set();
+  if(get("xl/styles.xml")){
+    const d=xmlDoc(get("xl/styles.xml"));
+    const custom={};
+    Array.from(d.getElementsByTagName("numFmt")).forEach(f=>{ custom[f.getAttribute("numFmtId")]=f.getAttribute("formatCode")||""; });
+    const xfsParent=d.getElementsByTagName("cellXfs")[0];
+    if(xfsParent){
+      Array.from(xfsParent.getElementsByTagName("xf")).forEach((xf,i)=>{
+        const id=parseInt(xf.getAttribute("numFmtId")||"0",10);
+        const code=(custom[id]||"").replace(/\[[^\]]*\]|"[^"]*"/g,"").toLowerCase();
+        if(BUILTIN_DATE_FMTS.has(id) || (custom[id]!==undefined && /[dy]/.test(code) && /m/.test(code))) dateStyles.add(i);
+      });
+    }
+  }
+  const wb=xmlDoc(get("xl/workbook.xml"));
+  const rels={};
+  if(get("xl/_rels/workbook.xml.rels")){
+    Array.from(xmlDoc(get("xl/_rels/workbook.xml.rels")).getElementsByTagName("Relationship")).forEach(r=>{ rels[r.getAttribute("Id")]=r.getAttribute("Target"); });
+  }
+  const sheets=[];
+  Array.from(wb.getElementsByTagName("sheet")).forEach((s,idx)=>{
+    const rid=s.getAttribute("r:id")||s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships","id");
+    let target=rels[rid]||`worksheets/sheet${idx+1}.xml`;
+    target=target.startsWith("/")?target.slice(1):("xl/"+target.replace(/^\.\//,""));
+    const u8=get(target); if(!u8) return;
+    const d=xmlDoc(u8);
+    const rows=[]; const dates=new Set();
+    Array.from(d.getElementsByTagName("row")).forEach(rEl=>{
+      const ri=parseInt(rEl.getAttribute("r"),10)-1;
+      const arr=rows[ri]||(rows[ri]=[]);
+      Array.from(rEl.getElementsByTagName("c")).forEach(c=>{
+        const ci=colIndex(c.getAttribute("r")); const t=c.getAttribute("t"); const sIdx=parseInt(c.getAttribute("s")||"-1",10);
+        const vEl=c.getElementsByTagName("v")[0]; let v=vEl?vEl.textContent:"";
+        if(t==="s") v=shared[parseInt(v,10)]||"";
+        else if(t==="inlineStr") v=Array.from(c.getElementsByTagName("t")).map(x=>x.textContent).join("");
+        else if(t==="b") v=v==="1"?"TRUE":"FALSE";
+        else if((!t||t==="n") && v!=="" && dateStyles.has(sIdx)){ dates.add(ri+","+ci); v="§DATE§"+v; }
+        else if((!t||t==="n") && v!==""){ const num=Number(v); if(Number.isFinite(num)) v=String(Math.round(num*1e9)/1e9); }
+        arr[ci]=v;
+      });
+    });
+    for(let i=0;i<rows.length;i++){ rows[i]=Array.from(rows[i]||[],x=>x==null?"":String(x)); }
+    sheets.push({name:s.getAttribute("name"), rows, dates});
+  });
+  return sheets;
+}
+function readCsv(text){
+  text=text.replace(/^﻿/,"");
+  const first=text.split(/\r?\n/)[0]||"";
+  const delim=[",",";","\t"].map(d=>[d,first.split(d).length]).sort((a,b)=>b[1]-a[1])[0][0];
+  const rows=[]; let row=[], cur="", q=false;
+  for(let i=0;i<text.length;i++){
+    const ch=text[i];
+    if(q){ if(ch==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else q=false; } else cur+=ch; }
+    else if(ch==='"') q=true;
+    else if(ch===delim){ row.push(cur); cur=""; }
+    else if(ch==="\n"||ch==="\r"){ if(ch==="\r"&&text[i+1]==="\n") i++; row.push(cur); rows.push(row); row=[]; cur=""; }
+    else cur+=ch;
+  }
+  if(cur!==""||row.length){ row.push(cur); rows.push(row); }
+  return [{name:"CSV", rows, dates:new Set()}];
+}
+async function readTableFile(file){
+  const buf=new Uint8Array(await file.arrayBuffer());
+  if(buf[0]===0x50 && buf[1]===0x4b) return readXlsx(buf);
+  return readCsv(new TextDecoder("utf-8").decode(buf));
+}
+/* Số ngày Excel -> "ngày/tháng" (đoán theo cách gõ kiểu Việt Nam d/m) */
+function excelSerialToDM(serial){
+  const ms=Math.round((Number(serial)-25569)*86400000);
+  const d=new Date(ms); if(isNaN(d)) return String(serial);
+  return `${d.getUTCDate()}/${d.getUTCMonth()+1}`;
+}
+
+/* ---- Ghi .xlsx (lấy từ index.html) ---- */
+function crc32(bytes){
+  let c, crc=0xFFFFFFFF;
+  for(let i=0;i<bytes.length;i++){ c=(crc^bytes[i])&0xFF; for(let k=0;k<8;k++) c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1); crc=(crc>>>8)^c; }
+  return (crc^0xFFFFFFFF)>>>0;
+}
+function xlsxXmlEscape(s){
+  return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&apos;").replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g,"");
+}
+function xlsxColLetter(n){ let s=""; while(n>0){ const r=(n-1)%26; s=String.fromCharCode(65+r)+s; n=Math.floor((n-1)/26);} return s; }
+function xlsxSheetXml(rows){
+  let out='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData>';
+  rows.forEach((row,ri)=>{
+    out+=`<row r="${ri+1}">`;
+    row.forEach((val,ci)=>{ out+=`<c r="${xlsxColLetter(ci+1)+(ri+1)}" t="inlineStr"><is><t xml:space="preserve">${xlsxXmlEscape(val)}</t></is></c>`; });
+    out+='</row>';
+  });
+  return out+'</sheetData></worksheet>';
+}
+async function deflateIfPossible(bytes){
+  if(typeof CompressionStream==="undefined") return {method:0,data:bytes};
+  try{ const cs=new CompressionStream("deflate-raw"); const w=cs.writable.getWriter(); w.write(bytes); w.close();
+    return {method:8,data:new Uint8Array(await new Response(cs.readable).arrayBuffer())}; }catch(e){ return {method:0,data:bytes}; }
+}
+async function zipStore(files){
+  const chunks=[], central=[]; let offset=0; const enc=new TextEncoder();
+  const push=u=>{chunks.push(u); offset+=u.length;};
+  const u16=n=>new Uint8Array([n&255,(n>>>8)&255]);
+  const u32=n=>new Uint8Array([n&255,(n>>>8)&255,(n>>>16)&255,(n>>>24)&255]);
+  for(const f of files){
+    const nb=enc.encode(f.name), crc=crc32(f.data); const {method,data}=await deflateIfPossible(f.data); const lo=offset;
+    [u32(0x04034b50),u16(20),u16(0x800),u16(method),u16(0),u16(0x21),u32(crc),u32(data.length),u32(f.data.length),u16(nb.length),u16(0),nb,data].forEach(push);
+    central.push({nb,crc,method,cs:data.length,us:f.data.length,lo});
+  }
+  const cstart=offset;
+  central.forEach(e=>{ [u32(0x02014b50),u16(20),u16(20),u16(0x800),u16(e.method),u16(0),u16(0x21),u32(e.crc),u32(e.cs),u32(e.us),u16(e.nb.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(e.lo),e.nb].forEach(push); });
+  const csize=offset-cstart;
+  [u32(0x06054b50),u16(0),u16(0),u16(central.length),u16(central.length),u32(csize),u32(cstart),u16(0)].forEach(push);
+  const out=new Uint8Array(offset); let p=0; chunks.forEach(c=>{out.set(c,p); p+=c.length;}); return out;
+}
+/* sheets: [{name, rows:[[...]]}] -> Blob .xlsx */
+async function buildXlsx(sheets){
+  const enc=new TextEncoder();
+  const files=[];
+  files.push({name:"[Content_Types].xml",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'+sheets.map((s,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")+'</Types>')});
+  files.push({name:"_rels/.rels",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>')});
+  files.push({name:"xl/workbook.xml",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets>'+sheets.map((s,i)=>`<sheet name="${xlsxXmlEscape(s.name.slice(0,31))}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("")+'</sheets></workbook>')});
+  files.push({name:"xl/_rels/workbook.xml.rels",data:enc.encode('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+sheets.map((s,i)=>`<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")+'</Relationships>')});
+  sheets.forEach((s,i)=>files.push({name:`xl/worksheets/sheet${i+1}.xml`,data:enc.encode(xlsxSheetXml(s.rows))}));
+  return new Blob([await zipStore(files)],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+
+/* =====================================================================
+   PHẦN 3 — PHÂN TÍCH SỐ NHÀ VÀ SỐ THỬA
+   ===================================================================== */
+/* parseSoNha("12/3A/5") -> {ok, canon:"12/3A/5", parts:[{n:12,s:""},{n:3,s:"A"},{n:5,s:""}], goc:12, kind}
+   kind: "so" (bình thường) | "gop" (12-14: một căn chiếm nhiều số) | "lo" (Lô B2, Kiốt K12...) */
+function parseSoNha(raw){
+  const r={raw:String(raw==null?"":raw), ok:false, canon:"", parts:[], goc:null, kind:"so", err:""};
+  let s=r.raw.normalize("NFC").toUpperCase().trim();
+  if(!s){ r.err="trống"; return r; }
+  if(s.startsWith("§DATE§")){ r.err="Excel đã đổi thành ngày"; return r; }
+  s=s.replace(/^(SỐ NHÀ|SỐ|SN|NHÀ|NO\.?)\s*[:.]?\s*/,"").replace(/[\\]/g,"/").replace(/\s*\/\s*/g,"/").replace(/[.,;]+$/,"").trim();
+  const lo=s.match(/^(LÔ|LO|KIỐT|KIOT|KI-ỐT|KIOSK|K)\s*[-.]?\s*([A-Z]{0,2}\s*\d+[A-Z]?)$/);
+  if(lo){
+    const code=lo[2].replace(/\s+/g,"");
+    const kindName=/^K/.test(lo[1])&&lo[1]!=="K"?"KIỐT":(lo[1]==="K"?"K":"LÔ");
+    const m=code.match(/(\d+)/);
+    r.ok=true; r.kind="lo"; r.canon=kindName+" "+code; r.parts=[{n:m?parseInt(m[1],10):0,s:code}]; r.goc=r.parts[0].n; return r;
+  }
+  const range=s.match(/^(\d+)([A-Z]?)\s*[-–]\s*(\d+)([A-Z]?)$/);
+  if(range){
+    const a=parseInt(range[1],10), b=parseInt(range[3],10);
+    if(b>a){ r.ok=true; r.kind="gop"; r.canon=`${a}${range[2]}-${b}${range[4]}`; r.parts=[{n:a,s:range[2]||""}]; r.goc=a; r.rangeEnd=b; return r; }
+  }
+  const segs=s.split("/");
+  for(const seg of segs){
+    const m=seg.trim().replace(/\s+/g,"").match(/^(\d+)([A-Z]{0,3})$/);
+    if(!m){ r.err=`không đọc được “${seg||"/"}”`; return r; }
+    let suf=m[2]; if(suf==="BIS"||suf==="TER") suf=suf; // giữ nguyên 12BIS
+    r.parts.push({n:parseInt(m[1],10), s:suf});
+  }
+  r.ok=true; r.goc=r.parts[0].n;
+  r.canon=r.parts.map(p=>p.n+p.s).join("/");
+  return r;
+}
+/* So sánh tự nhiên: 12 < 12/1 < 12/2 < 12A < 13 ; trả về âm/0/dương */
+function cmpSoNha(a,b){
+  if(!a.ok||!b.ok) return (a.ok?0:1)-(b.ok?0:1);
+  const n=Math.min(a.parts.length,b.parts.length);
+  for(let i=0;i<n;i++){
+    if(a.parts[i].n!==b.parts[i].n) return a.parts[i].n-b.parts[i].n;
+    if(a.parts[i].s!==b.parts[i].s) return a.parts[i].s<b.parts[i].s?-1:1;
+  }
+  return a.parts.length-b.parts.length;
+}
+function prefixCanon(p){ return p.parts.slice(0,-1).map(x=>x.n+x.s).join("/"); }
+function lastPart(p){ return p.parts[p.parts.length-1]; }
+
+/* Chuẩn hoá tờ/thửa: "012" -> "12"; nhận cả kiểu gộp "12/345", "Tờ 12 thửa 345", "12-345" */
+function cleanNum(s){ s=String(s==null?"":s).trim().toUpperCase().replace(/\s+/g,""); if(/^\d+$/.test(s)) return String(parseInt(s,10)); return s; }
+function parseThua(to, thua){
+  to=String(to==null?"":to).trim(); thua=String(thua==null?"":thua).trim();
+  if(thua.startsWith("§DATE§")) return {to:"",thua:"",key:null,err:"Excel đã đổi số thửa thành ngày"};
+  if(to.startsWith("§DATE§")) return {to:"",thua:"",key:null,err:"Excel đã đổi số tờ thành ngày"};
+  if(!to && thua){
+    const n=normalizeAddress(thua);
+    let m=n.match(/to\s*(?:ban do\s*|bd\s*)?(?:so\s*)?(\w+)\s*thua\s*(?:so\s*)?(\w+)/);
+    if(m){ to=m[1]; thua=m[2]; }
+    else if((m=thua.match(/^\s*(\d+[A-Z]?)\s*[\/\-–]\s*(\d+[A-Z]?)\s*$/i))){ to=m[1]; thua=m[2]; }
+  }
+  to=cleanNum(to); thua=cleanNum(thua.replace(/^th(ửa|ua)\s*(số)?\s*/i,""));
+  if(!to && !thua) return {to:"",thua:"",key:null};
+  if(!to||!thua) return {to,thua,key:null,err:!to?"có số thửa nhưng thiếu số tờ bản đồ":"có số tờ nhưng thiếu số thửa"};
+  return {to,thua,key:to+"/"+thua};
+}
+
+/* Tách "123/4 Đường Lê Đức Thọ, KP10, P. Gò Vấp" -> {so:"123/4", street:"Đường Lê Đức Thọ"} */
+function splitAddress(addr){
+  let s=String(addr||"").normalize("NFC").trim();
+  s=s.replace(/^(số nhà|số|sn|nhà)\s*[:.]?\s*/i,"");
+  const m=s.match(/^((?:lô|kiốt|kiot|k)\s*[-.]?\s*[a-z]{0,2}\s*\d+[a-z]?|\d+[a-z]{0,3}(?:\s*[-–]\s*\d+[a-z]?)?(?:\s*\/\s*\d+[a-z]{0,3})*)\s*[,\s]\s*(.*)$/i)
+         || s.match(/^((?:lô|kiốt|kiot|k)\s*[-.]?\s*[a-z]{0,2}\s*\d+[a-z]?|\d+[a-z]{0,3}(?:\s*[-–]\s*\d+[a-z]?)?(?:\s*\/\s*\d+[a-z]{0,3})*)$/i);
+  if(!m) return {so:"", street:s.split(",")[0].trim(), rest:s};
+  const rest=(m[2]||"").trim();
+  const street=rest.split(",")[0].replace(/^(đường|đ\.)\s*/i,"").trim();
+  return {so:m[1].trim(), street, rest};
+}
+
+/* =====================================================================
+   PHẦN 4 — DỰ ÁN (dữ liệu được lưu trên trình duyệt)
+   ===================================================================== */
+const PROJECT_KEY="khuPho10:bando:v1";
+const SECURITY_KEY="khuPho10:security:v2enc"; // key dữ liệu mã hoá của index.html (chỉ đọc, không bao giờ ghi)
+let P=newProject();
+function newProject(){ return {version:1, nextId:1, rows:[], parcels:[], parcelComplete:{cu:false,moi:false}, confirms:{}, layout:{}, labels:{moi:true,cu:true,thua:true,hh:true}, savedAt:null, sourceName:""}; }
+function loadProject(){
+  try{ const v=localStorage.getItem(PROJECT_KEY); if(v){ const o=JSON.parse(v); if(o&&o.version===1){ P=Object.assign(newProject(),o); } } }catch(e){}
+}
+let saveTimer=null;
+function saveProject(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    P.savedAt=todayVN();
+    try{ localStorage.setItem(PROJECT_KEY, JSON.stringify(P)); }
+    catch(e){ showToast("⚠️ Không lưu được trên trình duyệt này — hãy xuất file dự án để giữ lại"); }
+    renderProjectInfo();
+  },300);
+}
+const ROW_FIELDS=[
+  ["duong","Tên đường / hẻm"],["soCu","Số nhà cũ"],["soMoi","Số nhà mới"],
+  ["toCu","Tờ bản đồ cũ"],["thuaCu","Thửa cũ"],["toMoi","Tờ bản đồ mới"],["thuaMoi","Thửa mới"],
+  ["toChung","Tờ bản đồ (chung cũ/mới)"],["thuaChung","Thửa (chung cũ/mới)"],
+  ["toDP","Tổ dân phố"],["chuHo","Chủ hộ (ghi trong bảng)"],["ghiChu","Ghi chú"]
+];
+const PARCEL_FIELDS=[["to","Tờ bản đồ"],["thua","Số thửa"],["soNha","Số nhà ghi trên thửa"],["duong","Tên đường"],["ghiChu","Ghi chú"]];
+function makeRow(o){
+  const r={id:P.nextId++, duong:"", soCu:"", soMoi:"", toCu:"", thuaCu:"", toMoi:"", thuaMoi:"", toDP:"", chuHo:"", ghiChu:"", gop:false, tach:false, excelDate:[], streetCarried:false, src:""};
+  return Object.assign(r,o||{});
+}
+/* Mỗi xác nhận thực địa gắn với "dấu vân tay" nội dung dòng: sửa dòng là xác nhận tự mất hiệu lực */
+function rowHash(r){ return [r.duong,r.soCu,r.soMoi,r.toCu,r.thuaCu,r.toMoi,r.thuaMoi,r.gop?1:0,r.tach?1:0].join("|"); }
+function parcelHash(p){ return [p.map,p.to,p.thua,p.soNha,p.duong].join("|"); }
+
+/* =====================================================================
+   PHẦN 5 — BỘ KIỂM TRA SAI SÓT
+   Mỗi lỗi: {lvl:"err"|"warn", code, msg, fixOnly}. fixOnly = phải sửa, không xác nhận bỏ qua được.
+   ===================================================================== */
+let CHECK=null; // kết quả kiểm tra gần nhất
+
+function lisIndices(seq, cmp){
+  // dãy con không giảm dài nhất (theo cmp); trả về Set chỉ số thuộc dãy
+  const tails=[], prev=new Array(seq.length).fill(-1);
+  for(let i=0;i<seq.length;i++){
+    let lo=0, hi=tails.length;
+    while(lo<hi){ const mid=(lo+hi)>>1; if(cmp(seq[tails[mid]],seq[i])<=0) lo=mid+1; else hi=mid; }
+    if(lo>0) prev[i]=tails[lo-1];
+    tails[lo]=i;
+  }
+  const keep=new Set(); let k=tails.length?tails[tails.length-1]:-1;
+  while(k>=0){ keep.add(k); k=prev[k]; }
+  return keep;
+}
+function median(arr){ if(!arr.length) return 0; const a=[...arr].sort((x,y)=>x-y); const m=a.length>>1; return a.length%2?a[m]:(a[m-1]+a[m])/2; }
+
+function runChecks(){
+  const res={rows:new Map(), parcelIssues:[], streets:new Map()};
+  const add=(r,lvl,code,msg,fixOnly)=>{ const L=res.rows.get(r.id).issues; if(code!=="EXCEL_DATE" && L.some(i=>i.code===code)) return; L.push({lvl,code,msg,fixOnly:!!fixOnly}); };
+  const info=new Map();
+  P.rows.forEach(r=>{
+    const st=streetKey(r.duong);
+    const cu=parseSoNha(r.soCu), moi=parseSoNha(r.soMoi);
+    const pOld=parseThua(r.toCu, r.thuaCu), pNew=parseThua(r.toMoi, r.thuaMoi);
+    info.set(r.id,{r,st,cu,moi,pOld,pNew});
+    res.rows.set(r.id,{issues:[],status:"ok",confidence:"",households:[]});
+    if(!res.streets.has(st)) res.streets.set(st, r.duong||"(chưa rõ đường)");
+  });
+  const I=[...info.values()];
+
+  // --- 1. Thiếu / không đọc được ---
+  I.forEach(({r,cu,moi,pOld,pNew})=>{
+    (r.excelDate||[]).forEach(f=>{
+      const label={soCu:"số cũ",soMoi:"số mới",thuaCu:"thửa cũ",thuaMoi:"thửa mới",toCu:"tờ cũ",toMoi:"tờ mới"}[f]||f;
+      add(r,"err","EXCEL_DATE",`Excel đã tự đổi ô ${label} thành NGÀY THÁNG (app đoán là “${r[f]}”). Kiểm tra lại số gốc rồi sửa.`,false);
+    });
+    if(!r.soMoi.trim()) add(r,"err","MOI_TRONG","Chưa có số nhà mới",true);
+    else if(!moi.ok) add(r,"err","MOI_SAI",`Số mới không đọc được: ${moi.err}`,true);
+    if(!r.soCu.trim()) add(r,"warn","CU_TRONG","Không có số nhà cũ (nhà mới xây / mới tách?)");
+    else if(!cu.ok) add(r,"err","CU_SAI",`Số cũ không đọc được: ${cu.err}`,true);
+    if(!r.duong.trim()) add(r,"warn","DUONG_TRONG","Chưa ghi tên đường / hẻm");
+    if(pOld.err) add(r,"err","THUA_CU_THIEU","Thửa cũ: "+pOld.err,true);
+    if(pNew.err) add(r,"err","THUA_MOI_THIEU","Thửa mới: "+pNew.err,true);
+  });
+
+  // --- 2. Trùng số ---
+  const byCu=new Map(), byMoi=new Map();
+  I.forEach(x=>{
+    if(x.cu.ok){ const k=x.st+"|"+x.cu.canon; (byCu.get(k)||byCu.set(k,[]).get(k)).push(x); }
+    if(x.moi.ok){ const k=x.st+"|"+x.moi.canon; (byMoi.get(k)||byMoi.set(k,[]).get(k)).push(x); }
+  });
+  byCu.forEach(list=>{
+    if(list.length<2) return;
+    const moiSet=new Set(list.map(x=>x.moi.ok?x.moi.canon:"?"));
+    if(moiSet.size>1 && !list.every(x=>x.r.tach)){
+      list.forEach(x=>add(x.r,"err","CU_TRUNG",`Số cũ ${x.cu.canon} xuất hiện ${list.length} lần với các số mới khác nhau (${[...moiSet].join(", ")}). Nếu nhà cũ đã tách thành nhiều căn, đánh dấu “Tách”.`));
+    }else if(moiSet.size===1){
+      list.slice(1).forEach(x=>add(x.r,"warn","DONG_LAP",`Dòng lặp: số cũ ${x.cu.canon} → ${x.moi.canon} đã có ở dòng khác`));
+    }
+  });
+  byMoi.forEach(list=>{
+    if(list.length<2) return;
+    const cuSet=new Set(list.map(x=>x.cu.ok?x.cu.canon:"(trống)"));
+    if(cuSet.size>1 && !list.every(x=>x.r.gop)){
+      list.forEach(x=>add(x.r,"err","MOI_TRUNG",`Nhiều nhà cũ (${[...cuSet].join(", ")}) cùng đổi thành số mới ${x.moi.canon}. Nếu đúng là gộp nhà, đánh dấu “Gộp”.`));
+    }
+  });
+
+  // --- 3. Chẵn/lẻ, thứ tự, nhảy số trên trục đường chính ---
+  const mainByStreet=new Map();
+  I.forEach(x=>{
+    if(x.cu.ok&&x.moi.ok&&x.cu.parts.length===1&&x.moi.parts.length===1&&x.cu.kind!=="lo"&&x.moi.kind!=="lo"){
+      (mainByStreet.get(x.st)||mainByStreet.set(x.st,[]).get(x.st)).push(x);
+    }
+  });
+  mainByStreet.forEach(list=>{
+    // chẵn/lẻ: đa số giữ nguyên bên hay đổi bên?
+    const same=list.filter(x=>x.cu.goc%2===x.moi.goc%2), flip=list.filter(x=>x.cu.goc%2!==x.moi.goc%2);
+    const maj=same.length>=flip.length?same:flip, min=same.length>=flip.length?flip:same;
+    if(maj.length>=3 && min.length){
+      const strong=maj.length/list.length>=0.8;
+      min.forEach(x=>add(x.r, strong?"err":"warn","CHAN_LE",`Đổi bên chẵn/lẻ: số cũ ${x.cu.canon} (${x.cu.goc%2?"lẻ":"chẵn"}) → số mới ${x.moi.canon} (${x.moi.goc%2?"lẻ":"chẵn"}), trong khi ${maj.length}/${list.length} nhà cùng tuyến ${maj===same?"giữ nguyên bên":"đều đổi bên"}`));
+    }
+    [0,1].forEach(par=>{
+      const side=list.filter(x=>x.cu.goc%2===par).sort((a,b)=>cmpSoNha(a.cu,b.cu));
+      if(side.length<3) return;
+      const seq=side.map(x=>x.moi);
+      const inc=lisIndices(seq,cmpSoNha), dec=lisIndices(seq,(a,b)=>cmpSoNha(b,a));
+      const keep=dec.size>inc.size?dec:inc;
+      const reversed=dec.size>inc.size;
+      side.forEach((x,i)=>{ if(!keep.has(i)) add(x.r,"err","THU_TU",`Sai thứ tự so với các nhà lân cận bên ${par?"lẻ":"chẵn"}: số cũ ${x.cu.canon} → ${x.moi.canon} (có thể bị đảo số với nhà bên cạnh)${reversed?" — tuyến này đánh số mới ngược chiều số cũ":""}`); });
+      const kept=side.filter((x,i)=>keep.has(i));
+      const diffs=[]; for(let i=1;i<kept.length;i++) diffs.push(Math.abs(kept[i].moi.goc-kept[i-1].moi.goc));
+      const med=median(diffs.filter(d=>d>0))||2;
+      for(let i=1;i<kept.length;i++){
+        if(diffs[i-1]>Math.max(12,6*med)) add(kept[i].r,"warn","NHAY_SO",`Số mới nhảy ${diffs[i-1]} đơn vị so với nhà trước (${kept[i-1].cu.canon}→${kept[i-1].moi.canon}), bình thường chỉ khoảng ${med}`);
+      }
+    });
+  });
+
+  // --- 4. Hẻm / số phụ: các nhà trong cùng hẻm cũ phải sang cùng hẻm mới, đúng thứ tự ---
+  const byOldAlley=new Map();
+  I.forEach(x=>{
+    if(x.cu.ok&&x.moi.ok&&x.cu.parts.length>=2){
+      const k=x.st+"|"+prefixCanon(x.cu); (byOldAlley.get(k)||byOldAlley.set(k,[]).get(k)).push(x);
+    }
+  });
+  byOldAlley.forEach((list,k)=>{
+    const oldPrefix=k.split("|").slice(1).join("|");
+    const count=new Map();
+    list.forEach(x=>{ const np=x.moi.parts.length>=2?prefixCanon(x.moi):"(số chính)"; count.set(np,(count.get(np)||0)+1); });
+    const majority=[...count.entries()].sort((a,b)=>b[1]-a[1])[0][0];
+    if(count.size>1){
+      list.forEach(x=>{ const np=x.moi.parts.length>=2?prefixCanon(x.moi):"(số chính)"; if(np!==majority) add(x.r,"err","HEM_LECH",`Hẻm cũ ${oldPrefix}: đa số nhà đổi sang hẻm ${majority}, riêng nhà này (${x.cu.canon}) sang ${np}`); });
+    }
+    const parent=byCu.get(k.split("|")[0]+"|"+oldPrefix);
+    if(parent&&parent.length===1&&parent[0].moi.ok&&majority!=="(số chính)"){
+      const expectRoot=parent[0].moi.canon;
+      const gotRoot=majority.split("/").slice(0, parent[0].moi.parts.length).join("/");
+      if(gotRoot!==expectRoot) list.forEach(x=>add(x.r,"warn","HEM_GOC",`Nhà mặt tiền ${oldPrefix} đổi thành ${expectRoot}, nhưng hẻm của nó lại đổi thành hẻm ${majority}`));
+    }
+    const sorted=[...list].sort((a,b)=>cmpSoNha(a.cu,b.cu));
+    if(sorted.length>=3){
+      const seq=sorted.map(x=>x.moi);
+      const inc=lisIndices(seq,cmpSoNha), dec=lisIndices(seq,(a,b)=>cmpSoNha(b,a));
+      const keep=dec.size>inc.size?dec:inc;
+      sorted.forEach((x,i)=>{ if(!keep.has(i)) add(x.r,"err","THU_TU_HEM",`Sai thứ tự trong hẻm ${oldPrefix}: ${x.cu.canon} → ${x.moi.canon}`); });
+    }
+  });
+
+  // --- 5. Thửa đất ---
+  const byNewParcel=new Map(), byOldParcel=new Map();
+  I.forEach(x=>{
+    if(x.pNew.key) (byNewParcel.get(x.pNew.key)||byNewParcel.set(x.pNew.key,[]).get(x.pNew.key)).push(x);
+    if(x.pOld.key) (byOldParcel.get(x.pOld.key)||byOldParcel.set(x.pOld.key,[]).get(x.pOld.key)).push(x);
+  });
+  const parcelGroupCheck=(map,label)=>map.forEach((list,key)=>{
+    const moiSet=new Set(list.filter(x=>x.moi.ok).map(x=>x.st+"|"+x.moi.canon));
+    if(moiSet.size>1 && !list.every(x=>x.r.tach)){
+      list.forEach(x=>add(x.r,"err","THUA_NHIEU_SO",`Thửa ${label} ${key} mang ${moiSet.size} số nhà mới khác nhau (${list.map(y=>y.moi.canon).join(", ")}). Nếu thửa có nhiều căn, đánh dấu “Tách”.`));
+    }
+  });
+  parcelGroupCheck(byNewParcel,"mới"); parcelGroupCheck(byOldParcel,"cũ"); // add() bỏ trùng mã lỗi khi tờ/thửa cũ = mới
+  byMoi.forEach(list=>{
+    const parcels=new Set(list.map(x=>x.pNew.key||x.pOld.key).filter(Boolean));
+    if(parcels.size>1 && !list.every(x=>x.r.gop)){
+      list.forEach(x=>add(x.r,"err","SO_NHIEU_THUA",`Số mới ${x.moi.canon} nằm trên ${parcels.size} thửa khác nhau (${[...parcels].join(", ")}). Nếu nhà xây trên nhiều thửa, đánh dấu “Gộp”.`));
+    }
+  });
+  // thửa cũ <-> thửa mới phải 1-1 (trừ khi tách/gộp)
+  byOldParcel.forEach((list,key)=>{
+    const news=new Set(list.map(x=>x.pNew.key).filter(Boolean));
+    if(news.size>1 && !list.every(x=>x.r.tach)) list.forEach(x=>add(x.r,"warn","THUA_CU_NHIEU_MOI",`Thửa cũ ${key} ứng với ${news.size} thửa mới (${[...news].join(", ")}) — tách thửa?`));
+  });
+  byNewParcel.forEach((list,key)=>{
+    const olds=new Set(list.map(x=>x.pOld.key).filter(Boolean));
+    if(olds.size>1 && !list.every(x=>x.r.gop)) list.forEach(x=>add(x.r,"warn","THUA_MOI_NHIEU_CU",`Thửa mới ${key} ứng với ${olds.size} thửa cũ (${[...olds].join(", ")}) — gộp thửa?`));
+  });
+
+  // --- 6. Đối chiếu với danh sách thửa đất (nếu có) ---
+  ["cu","moi"].forEach(mt=>{
+    const list=P.parcels.filter(p=>p.map===mt);
+    if(!list.length) return;
+    const rowsByParcel=mt==="cu"?byOldParcel:byNewParcel;
+    const seen=new Set();
+    list.forEach(p=>{
+      const pk=parseThua(p.to,p.thua);
+      const base={key:"P|"+p.id, p, mt};
+      if(!pk.key){ res.parcelIssues.push({...base,lvl:"err",msg:pk.err||"Thiếu tờ hoặc thửa",fixOnly:true}); return; }
+      seen.add(pk.key);
+      const at=rowsByParcel.get(pk.key)||[];
+      const so=parseSoNha(p.soNha);
+      if(!at.length){
+        if(p.soNha && so.ok){
+          // có thể bảng số nhà ghi nhầm thửa: tìm nhà mang số này
+          const numMatches=I.filter(x=>(mt==="cu"?x.cu:x.moi).ok && (mt==="cu"?x.cu:x.moi).canon===so.canon && (!p.duong||x.st===streetKey(p.duong)));
+          numMatches.forEach(x=>{ const rk=(mt==="cu"?x.pOld:x.pNew).key; add(x.r,"err","THUA_LECH_FILE",`Danh sách thửa (bản đồ ${mt==="cu"?"cũ":"mới"}) ghi số nhà ${so.canon} ở thửa ${pk.key}, bảng số nhà lại ghi thửa ${rk||"(trống)"}`); });
+          res.parcelIssues.push({...base,lvl:numMatches.length?"err":"warn",msg:numMatches.length?`Số nhà ${so.canon} ở thửa này, nhưng bảng số nhà ghi thửa khác`:`Thửa có số nhà ${so.canon} nhưng không có dòng nào trong bảng số nhà`});
+        }else{
+          res.parcelIssues.push({...base,lvl:"warn",msg:"Thửa không có trong bảng số nhà (đất trống hay bị sót?)"});
+        }
+        return;
+      }
+      if(p.soNha && so.ok){
+        const ok=at.some(x=>{ const s=mt==="cu"?x.cu:x.moi; return s.ok&&s.canon===so.canon; });
+        if(!ok){
+          at.forEach(x=>add(x.r,"err","THUA_LECH_FILE",`Thửa ${pk.key}: danh sách thửa (bản đồ ${mt==="cu"?"cũ":"mới"}) ghi số nhà ${so.canon}, bảng ghi ${(mt==="cu"?x.r.soCu:x.r.soMoi)||"(trống)"}`));
+          res.parcelIssues.push({...base,lvl:"err",msg:`Số nhà trên thửa (${so.canon}) khác với bảng số nhà (${at.map(x=>mt==="cu"?x.r.soCu:x.r.soMoi).join(", ")})`});
+        }
+      }
+    });
+    if(P.parcelComplete&&P.parcelComplete[mt]) I.forEach(x=>{ const k=(mt==="cu"?x.pOld:x.pNew).key; if(k&&!seen.has(k)) add(x.r,"warn","THUA_KHONG_CO",`Thửa ${k} không có trong danh sách thửa bản đồ ${mt==="cu"?"cũ":"mới"}`); });
+  });
+
+  // --- 7. Tổng hợp trạng thái + mức tin cậy ---
+  const sum={total:0,ok:0,warn:0,err:0,conf:0,blocking:0};
+  I.forEach(x=>{
+    const o=res.rows.get(x.r.id);
+    const c=P.confirms["R|"+x.r.id];
+    o.confirmed=!!(c && c.hash===rowHash(x.r));
+    o.confirm=o.confirmed?c:null;
+    const blocking=o.issues.some(i=>i.fixOnly);
+    const hasErr=o.issues.some(i=>i.lvl==="err"), hasWarn=o.issues.some(i=>i.lvl==="warn");
+    if(!o.issues.length) o.status="ok";
+    else if(o.confirmed && !blocking) o.status="conf";
+    else o.status=hasErr?"err":(hasWarn?"warn":"ok");
+    const hasParcel=!!(x.pNew.key||x.pOld.key);
+    o.confidence=(o.status==="ok"||o.status==="conf")?(hasParcel?"Cao (khớp số nhà + thửa)":"Trung bình (chưa có số thửa)"):"Thấp";
+    o.blocking=blocking;
+    sum.total++; sum[o.status]++; if(blocking) sum.blocking++;
+  });
+  res.parcelIssues.forEach(pi=>{
+    const c=P.confirms[pi.key]; pi.confirmed=!!(c&&c.hash===parcelHash(pi.p)&&!pi.fixOnly); pi.confirm=pi.confirmed?c:null;
+  });
+  sum.parcelOpen=res.parcelIssues.filter(pi=>!pi.confirmed).length;
+  sum.final=sum.total>0 && sum.warn===0 && sum.err===0 && sum.parcelOpen===0;
+  res.sum=sum; res.info=info;
+  CHECK=res;
+  if(HH.loaded) matchHouseholds();
+  return res;
+}
+
+/* =====================================================================
+   PHẦN 6 — GIAO DIỆN NHẬP: ghép cột
+   ===================================================================== */
+function guessField(header, kind){
+  const raw=String(header||"").toLowerCase().normalize("NFC"); const n=normalizeAddress(header);
+  if(!n) return "";
+  const cu=/\bcu\b/.test(n), moi=/\bmoi\b/.test(n);
+  const isTo=/tờ/.test(raw)||/\bto ban do\b|\bto bd\b|\btbd\b/.test(n);
+  if(kind==="parcel"){
+    if(/thua/.test(n)) return "thua";
+    if(isTo) return "to";
+    if(/ghi chu/.test(n)) return "ghiChu";
+    if(/so nha|dia chi/.test(n)) return "soNha";
+    if(/duong|tuyen|hem/.test(n)&&!/khu pho/.test(n)) return "duong";
+    return "";
+  }
+  if(/thua/.test(n)) return cu?"thuaCu":moi?"thuaMoi":"thuaChung";
+  if(isTo) return cu?"toCu":moi?"toMoi":"toChung";
+  if(/ghi chu/.test(n)) return "ghiChu";
+  if(/chu ho|ho ten|ten chu/.test(n)) return "chuHo";
+  if(/tổ/.test(raw)||/to dan pho/.test(n)) return "toDP";
+  if(cu) return "soCu";
+  if(moi) return "soMoi";
+  if(/duong|tuyen|hem|\bngo\b|\bpho\b/.test(n)&&!/khu pho|so nha/.test(n)) return "duong";
+  return "";
+}
+function detectHeaderRow(rows, kind){
+  let best=0, bestScore=-1;
+  for(let i=0;i<Math.min(rows.length,20);i++){
+    const fields=new Set((rows[i]||[]).map(h=>guessField(h,kind)).filter(Boolean));
+    const score=fields.size+((kind==="parcel"?fields.has("thua"):(fields.has("soCu")||fields.has("soMoi")))?2:0);
+    if(score>bestScore){bestScore=score;best=i;}
+  }
+  return best;
+}
+const MAPPER={main:null, parcel:null};
+function renderMapper(which, sheets, fileName){
+  const kind=which==="main"?"main":"parcel";
+  const FIELDS=kind==="main"?ROW_FIELDS:PARCEL_FIELDS;
+  const st={sheets, sheetIdx:0, headerRow:0, mapping:{}, fileName};
+  MAPPER[which]=st;
+  const host=$(which==="main"?"#mapperMain":"#mapperParcel");
+  function autoMap(){
+    const rows=st.sheets[st.sheetIdx].rows;
+    st.headerRow=detectHeaderRow(rows,kind);
+    st.mapping={};
+    (rows[st.headerRow]||[]).forEach((h,ci)=>{ const f=guessField(h,kind); if(f && !Object.values(st.mapping).includes(f)) st.mapping[ci]=f; });
+  }
+  function draw(){
+    const rows=st.sheets[st.sheetIdx].rows;
+    const header=rows[st.headerRow]||[];
+    const ncol=Math.max(header.length,...rows.slice(st.headerRow,st.headerRow+8).map(r=>(r||[]).length),1);
+    const preview=rows.slice(st.headerRow+1).filter(r=>r&&r.some(c=>String(c).trim())).slice(0,5);
+    let h=`<h3>Ghép cột — ${escapeHtml(fileName)}</h3>
+      <div class="row">${st.sheets.length>1?`<label class="fld">Trang tính<select data-k="sheet">${st.sheets.map((s,i)=>`<option value="${i}" ${i===st.sheetIdx?"selected":""}>${escapeHtml(s.name)}</option>`).join("")}</select></label>`:""}
+      <label class="fld">Dòng tiêu đề<select data-k="header">${rows.slice(0,25).map((r,i)=>`<option value="${i}" ${i===st.headerRow?"selected":""}>Dòng ${i+1}: ${escapeHtml((r||[]).filter(Boolean).join(" | ").slice(0,60))}</option>`).join("")}</select></label></div>
+      <p class="muted">App đã tự đoán cột theo tiêu đề — kiểm tra lại từng cột cho đúng.</p>
+      <div class="tbl-wrap"><table><tr>`;
+    for(let c=0;c<ncol;c++){
+      h+=`<th><div style="font-weight:400;color:var(--muted);font-size:.74rem">${xlsxColLetter(c+1)}: ${escapeHtml(header[c]||"")}</div>
+        <select data-col="${c}"><option value="">— bỏ qua —</option>${FIELDS.map(([k,l])=>`<option value="${k}" ${st.mapping[c]===k?"selected":""}>${l}</option>`).join("")}</select></th>`;
+    }
+    h+="</tr>"+preview.map(r=>"<tr>"+Array.from({length:ncol},(_,c)=>`<td>${escapeHtml(String(r[c]||"").replace("§DATE§","📅"))}</td>`).join("")+"</tr>").join("")+"</table></div>";
+    if(kind==="main"){
+      h+=`<div class="row" style="margin-top:8px"><label><input type="radio" name="impMode" value="replace" checked> Thay toàn bộ bảng hiện có</label><label><input type="radio" name="impMode" value="append"> Thêm vào bảng hiện có</label></div>`;
+    }
+    h+=`<div class="row" style="margin-top:8px"><button class="btn primary" data-k="apply">✔ Nạp dữ liệu</button><button class="btn" data-k="cancel">Huỷ</button></div>`;
+    host.innerHTML=h;
+    host.querySelector('[data-k="sheet"]')?.addEventListener("change",e=>{st.sheetIdx=+e.target.value; autoMap(); draw();});
+    host.querySelector('[data-k="header"]').addEventListener("change",e=>{
+      st.headerRow=+e.target.value; st.mapping={};
+      (st.sheets[st.sheetIdx].rows[st.headerRow]||[]).forEach((hh,ci)=>{ const f=guessField(hh,kind); if(f&&!Object.values(st.mapping).includes(f)) st.mapping[ci]=f; });
+      draw();
+    });
+    $$("select[data-col]",host).forEach(s=>s.addEventListener("change",e=>{
+      const c=+e.target.dataset.col; const v=e.target.value;
+      Object.keys(st.mapping).forEach(k=>{ if(st.mapping[k]===v && +k!==c) delete st.mapping[k]; });
+      if(v) st.mapping[c]=v; else delete st.mapping[c];
+      draw();
+    }));
+    host.querySelector('[data-k="cancel"]').addEventListener("click",()=>{host.innerHTML=""; MAPPER[which]=null;});
+    host.querySelector('[data-k="apply"]').addEventListener("click",()=>{
+      const mode=(host.querySelector('input[name="impMode"]:checked')||{}).value||"replace";
+      kind==="main"?applyMainImport(st,mode):applyParcelImport(st);
+      host.innerHTML=""; MAPPER[which]=null;
+    });
+  }
+  autoMap(); draw();
+}
+function applyMainImport(st, mode){
+  const fields=Object.values(st.mapping);
+  if(!fields.includes("soMoi")&&!fields.includes("soCu")){ showToast("⚠️ Cần chọn ít nhất cột Số nhà cũ hoặc Số nhà mới"); return; }
+  const sheet=st.sheets[st.sheetIdx];
+  if(mode==="replace"){ P.rows=[]; P.confirms=Object.fromEntries(Object.entries(P.confirms).filter(([k])=>!k.startsWith("R|"))); P.nextId=1; }
+  let curStreet="", added=0, skipped=0;
+  for(let ri=st.headerRow+1; ri<sheet.rows.length; ri++){
+    const row=sheet.rows[ri]; if(!row) continue;
+    const o={}; const dateFields=[];
+    Object.entries(st.mapping).forEach(([ci,f])=>{
+      let v=String(row[ci]==null?"":row[ci]).trim();
+      if(v.startsWith("§DATE§")){ dateFields.push(f); v=excelSerialToDM(v.slice(6)); }
+      o[f]=v;
+    });
+    if(!Object.values(o).some(v=>v)) continue;
+    // Dòng tiêu đề nhóm: chỉ có tên đường, không có số -> đổi tuyến hiện tại
+    if(o.duong && !o.soCu && !o.soMoi && !o.thuaCu && !o.thuaMoi && !o.thuaChung){ curStreet=o.duong; continue; }
+    if(!o.soCu && !o.soMoi){ skipped++; continue; }
+    // Ô số nhà ghi kèm tên đường ("12 Lê Lợi") -> tách ra
+    ["soCu","soMoi"].forEach(f=>{
+      if(o[f] && /[a-zà-ỹ]{3,}/i.test(o[f].replace(/^(số nhà|số|sn|lô|kiốt|kiot)\s*/i,""))){
+        const sp=splitAddress(o[f]); if(sp.so){ o[f]=sp.so; if(!o.duong && sp.street) o.duong=sp.street; }
+      }
+    });
+    let carried=false;
+    if(o.duong) curStreet=o.duong; else if(curStreet){ o.duong=curStreet; carried=true; }
+    if(o.toChung||o.thuaChung){ o.toCu=o.toCu||o.toChung||""; o.thuaCu=o.thuaCu||o.thuaChung||""; o.toMoi=o.toMoi||o.toChung||""; o.thuaMoi=o.thuaMoi||o.thuaChung||""; }
+    delete o.toChung; delete o.thuaChung;
+    if(dateFields.includes("toChung")) dateFields.push("toCu","toMoi");
+    if(dateFields.includes("thuaChung")) dateFields.push("thuaCu","thuaMoi");
+    P.rows.push(makeRow({...o, excelDate:dateFields.filter(f=>!/Chung$/.test(f)), streetCarried:carried, src:`${st.fileName} · ${sheet.name} · dòng ${ri+1}`}));
+    added++;
+  }
+  P.sourceName=st.fileName;
+  saveProject(); runChecks(); renderAll();
+  showToast(`✅ Đã nạp ${added} nhà${skipped?` · bỏ qua ${skipped} dòng không có số nhà`:""}`);
+}
+function applyParcelImport(st){
+  const fields=Object.values(st.mapping);
+  if(!fields.includes("thua")){ showToast("⚠️ Cần chọn cột Số thửa"); return; }
+  const mt=$("#parcelMapType").value;
+  const sheet=st.sheets[st.sheetIdx];
+  P.parcels=P.parcels.filter(p=>p.map!==mt);
+  let n=0, curStreet="";
+  for(let ri=st.headerRow+1; ri<sheet.rows.length; ri++){
+    const row=sheet.rows[ri]; if(!row) continue;
+    const o={};
+    Object.entries(st.mapping).forEach(([ci,f])=>{ let v=String(row[ci]==null?"":row[ci]).trim(); if(v.startsWith("§DATE§")) v="§DATE§"+v.slice(6); o[f]=v; });
+    if(!Object.values(o).some(v=>v)) continue;
+    if(o.duong && !o.thua && !o.to){ curStreet=o.duong; continue; }
+    if(!o.duong) o.duong=curStreet; else curStreet=o.duong;
+    if(o.soNha && /[a-zà-ỹ]{3,}/i.test(o.soNha)){ const sp=splitAddress(o.soNha); if(sp.so){ o.soNha=sp.so; if(!o.duong) o.duong=sp.street; } }
+    P.parcels.push({id:P.nextId++, map:mt, to:o.to||"", thua:o.thua||"", soNha:o.soNha||"", duong:o.duong||"", ghiChu:o.ghiChu||""});
+    n++;
+  }
+  saveProject(); runChecks(); renderAll();
+  showToast(`✅ Đã nạp ${n} thửa (bản đồ ${mt==="cu"?"cũ":"mới"})`);
+}
+
+async function downloadTemplate(){
+  const blob=await buildXlsx([{name:"So nha cu moi",rows:[
+    ["Tên đường","Số nhà cũ","Số nhà mới","Tờ bản đồ cũ","Thửa cũ","Tờ bản đồ mới","Thửa mới","Tổ dân phố","Chủ hộ","Ghi chú"],
+    ["Lê Đức Thọ","1","3","12","101","8","55","1","",""],
+    ["Lê Đức Thọ","3","5","12","102","8","56","1","",""],
+    ["Lê Đức Thọ","12/3","20/3","12","140","8","70","2","","Hẻm 12 cũ"],
+  ]},{name:"Huong dan",rows:[
+    ["Hướng dẫn"],
+    ["• Mỗi dòng là một căn nhà. Cột Số nhà mới là bắt buộc."],
+    ["• Định dạng các cột số nhà và số thửa là TEXT (Văn bản) trước khi gõ, để Excel không tự đổi 12/3 thành ngày tháng."],
+    ["• Nếu tờ/thửa không đổi giữa bản đồ cũ và mới, chỉ cần một cặp cột “Tờ bản đồ”, “Thửa”."],
+    ["• Tên đường có thể ghi một lần ở dòng đầu nhóm — app tự điền cho các dòng bên dưới."],
+  ]}]);
+  downloadBlob(blob,"mau_so_nha_cu_moi.xlsx");
+}
+
+/* =====================================================================
+   PHẦN 7 — GIAO DIỆN KIỂM TRA
+   ===================================================================== */
+let checkFilter="all", checkLimit=200;
+function statusPill(s){ return {ok:'<span class="pill ok">✅ Hợp lệ</span>',warn:'<span class="pill warn">⚠️ Cần xem</span>',err:'<span class="pill err">❌ Lỗi</span>',conf:'<span class="pill conf">☑️ Đã xác nhận</span>'}[s]; }
+function fmtThua(to,thua){ const p=parseThua(to,thua); return p.key||(to||thua?escapeHtml(`${to||"?"}/${thua||"?"}`):""); }
+function renderFinalBanner(el){
+  if(!CHECK||!P.rows.length){ el.innerHTML=""; return; }
+  const s=CHECK.sum;
+  el.innerHTML=s.final
+    ?`<div class="banner ok">✅ Bảng đã sạch: ${s.total} nhà đều hợp lệ hoặc đã xác nhận thực địa — bản đồ xuất ra sẽ ghi “ĐÃ CHỐT”.</div>`
+    :`<div class="banner bad">Còn ${s.err} dòng lỗi, ${s.warn} dòng cần xem${s.parcelOpen?`, ${s.parcelOpen} thửa cần xem`:""}${s.blocking?` (${s.blocking} dòng bắt buộc phải sửa)`:""} — bản đồ xuất ra sẽ ghi “BẢN NHÁP”.</div>`;
+}
+function renderCheck(){
+  renderFinalBanner($("#finalBanner"));
+  const badge=$("#badgeIssues");
+  if(CHECK&&(CHECK.sum.err+CHECK.sum.warn)>0){ badge.style.display=""; badge.textContent=CHECK.sum.err+CHECK.sum.warn; } else badge.style.display="none";
+  if(!CHECK||!P.rows.length){ $("#checkStats").innerHTML=""; $("#checkTable").innerHTML='<tr><td class="muted">Chưa có dữ liệu — nạp file ở bước 1.</td></tr>'; $("#checkCount").textContent=""; $("#checkMore").style.display="none"; $("#parcelIssuesCard").style.display="none"; return; }
+  const s=CHECK.sum;
+  $("#checkStats").innerHTML=[["all","Tổng số nhà",s.total],["err","❌ Lỗi",s.err],["warn","⚠️ Cần xem",s.warn],["conf","☑️ Đã xác nhận",s.conf],["ok","✅ Hợp lệ",s.ok]]
+    .map(([k,l,v])=>`<div class="stat ${checkFilter===k?"active":""}" data-f="${k}"><b>${v}</b><span>${l}</span></div>`).join("");
+  $$("#checkStats .stat").forEach(el=>el.addEventListener("click",()=>{checkFilter=el.dataset.f; checkLimit=200; renderCheck();}));
+  const sel=$("#checkStreet"); const cur=sel.value;
+  sel.innerHTML='<option value="">Tất cả tuyến</option>'+[...CHECK.streets.entries()].map(([k,v])=>`<option value="${escapeHtml(k)}" ${k===cur?"selected":""}>${escapeHtml(v)}</option>`).join("");
+  const q=normalizeAddress($("#checkSearch").value);
+  const order={err:0,warn:1,conf:2,ok:3};
+  let list=P.rows.map(r=>({r,o:CHECK.rows.get(r.id),x:CHECK.info.get(r.id)}))
+    .filter(({r,o,x})=>(checkFilter==="all"||o.status===checkFilter)&&(!sel.value||x.st===sel.value)
+      &&(!q||normalizeAddress([r.duong,r.soCu,r.soMoi,r.toCu+"/"+r.thuaCu,r.toMoi+"/"+r.thuaMoi,r.chuHo,r.ghiChu].join(" ")).includes(q)));
+  list.sort((a,b)=>order[a.o.status]-order[b.o.status] || a.x.st.localeCompare(b.x.st) || cmpSoNha(a.x.moi,b.x.moi));
+  const shown=list.slice(0,checkLimit);
+  $("#checkTable").innerHTML=`<tr><th>Trạng thái</th><th>Đường</th><th>Số cũ</th><th>Số mới</th><th>Thửa cũ</th><th>Thửa mới</th><th>Vấn đề / tin cậy</th><th></th></tr>`+
+    shown.map(({r,o})=>`<tr class="st-${o.status}">
+      <td>${statusPill(o.status)}${r.gop?' <span class="pill conf">Gộp</span>':""}${r.tach?' <span class="pill conf">Tách</span>':""}</td>
+      <td>${escapeHtml(r.duong)}${r.streetCarried?' <span class="muted" title="Tên đường được điền tự động từ dòng phía trên">↓</span>':""}</td>
+      <td>${escapeHtml(r.soCu)}</td><td><b>${escapeHtml(r.soMoi)}</b></td>
+      <td>${fmtThua(r.toCu,r.thuaCu)}</td><td>${fmtThua(r.toMoi,r.thuaMoi)}</td>
+      <td class="col-issues">${o.issues.length?`<ul class="issues">${o.issues.map(i=>`<li class="${i.lvl}">${escapeHtml(i.msg)}${i.fixOnly?" <b>(phải sửa)</b>":""}</li>`).join("")}</ul>`:""}
+        <div class="muted" style="font-size:.74rem">Tin cậy: ${o.confidence}${o.households.length?` · ${o.households.length} hộ`:""}${o.confirm?` · Xác nhận: ${escapeHtml(o.confirm.by)} ${escapeHtml(o.confirm.at)}${o.confirm.note?" – "+escapeHtml(o.confirm.note):""}`:""}</div>
+        ${r.src?`<div class="muted" style="font-size:.7rem">${escapeHtml(r.src)}</div>`:""}</td>
+      <td style="white-space:nowrap"><button class="btn small" data-edit="${r.id}">Sửa</button>
+        ${o.issues.length&&!o.blocking&&!o.confirmed?`<button class="btn small" data-confirm="${r.id}">Đúng thực địa</button>`:""}
+        ${o.confirmed?`<button class="btn small" data-unconfirm="${r.id}">Bỏ xác nhận</button>`:""}</td></tr>`).join("");
+  $("#checkCount").textContent=`Hiển thị ${shown.length}/${list.length} dòng`;
+  $("#checkMore").style.display=list.length>shown.length?"":"none";
+  $$("#checkTable [data-edit]").forEach(b=>b.addEventListener("click",()=>openRowEditor(+b.dataset.edit)));
+  $$("#checkTable [data-confirm]").forEach(b=>b.addEventListener("click",()=>confirmItem("R|"+b.dataset.confirm)));
+  $$("#checkTable [data-unconfirm]").forEach(b=>b.addEventListener("click",()=>{ delete P.confirms["R|"+b.dataset.unconfirm]; saveProject(); runChecks(); renderAll(); }));
+  // thửa
+  const pis=CHECK.parcelIssues;
+  $("#parcelIssuesCard").style.display=pis.length?"":"none";
+  $("#parcelIssuesTable").innerHTML=`<tr><th>Trạng thái</th><th>Bản đồ</th><th>Tờ/thửa</th><th>Số nhà trên thửa</th><th>Đường</th><th>Vấn đề</th><th></th></tr>`+
+    pis.map(pi=>`<tr class="st-${pi.confirmed?"conf":pi.lvl}"><td>${statusPill(pi.confirmed?"conf":pi.lvl)}</td><td>${pi.mt==="cu"?"Cũ":"Mới"}</td><td>${fmtThua(pi.p.to,pi.p.thua)}</td><td>${escapeHtml(pi.p.soNha)}</td><td>${escapeHtml(pi.p.duong)}</td><td>${escapeHtml(pi.msg)}${pi.confirm?`<div class="muted" style="font-size:.74rem">Xác nhận: ${escapeHtml(pi.confirm.by)} ${escapeHtml(pi.confirm.at)}</div>`:""}</td>
+      <td>${pi.fixOnly?"":pi.confirmed?`<button class="btn small" data-punconfirm="${pi.key}">Bỏ xác nhận</button>`:`<button class="btn small" data-pconfirm="${pi.key}">Đúng thực địa</button>`}</td></tr>`).join("");
+  $$("#parcelIssuesTable [data-pconfirm]").forEach(b=>b.addEventListener("click",()=>confirmItem(b.dataset.pconfirm)));
+  $$("#parcelIssuesTable [data-punconfirm]").forEach(b=>b.addEventListener("click",()=>{ delete P.confirms[b.dataset.punconfirm]; saveProject(); runChecks(); renderAll(); }));
+}
+let lastConfirmer="";
+try{ lastConfirmer=localStorage.getItem("khuPho10:bando:confirmer")||""; }catch(e){}
+function confirmItem(key){
+  let hash, title;
+  if(key.startsWith("R|")){ const r=P.rows.find(x=>x.id===+key.slice(2)); if(!r) return; hash=rowHash(r); title=`Nhà ${r.soCu||"?"} → ${r.soMoi} (${r.duong})`; }
+  else{ const p=P.parcels.find(x=>x.id===+key.slice(2)); if(!p) return; hash=parcelHash(p); title=`Thửa ${p.to}/${p.thua}`; }
+  openSheet(`<h2>Xác nhận đã kiểm tra thực địa</h2><p><b>${escapeHtml(title)}</b></p>
+    <p class="muted">Chỉ xác nhận khi đã đối chiếu thực tế (biển số nhà, bản đồ gốc, giấy tờ) và thấy thông tin trong bảng là đúng. Nếu sau này sửa dòng này, xác nhận sẽ tự huỷ.</p>
+    <label class="fld">Người kiểm tra<input type="text" id="cfBy" value="${escapeHtml(lastConfirmer)}"></label>
+    <label class="fld" style="margin-top:6px">Ghi chú (đã xem gì?)<input type="text" id="cfNote" placeholder="vd: đã xem biển số nhà, khớp sổ hồng"></label>
+    <div class="row" style="margin-top:10px"><button class="btn primary" id="cfOk">Xác nhận</button><button class="btn" id="cfCancel">Huỷ</button></div>`);
+  $("#cfCancel").onclick=closeSheet;
+  $("#cfOk").onclick=()=>{
+    const by=$("#cfBy").value.trim(); if(!by){ showToast("⚠️ Ghi tên người kiểm tra"); return; }
+    lastConfirmer=by; try{ localStorage.setItem("khuPho10:bando:confirmer",by); }catch(e){}
+    P.confirms[key]={hash,by,at:todayVN(),note:$("#cfNote").value.trim()};
+    closeSheet(); saveProject(); runChecks(); renderAll();
+  };
+}
+function openSheet(html){ $("#sheet").innerHTML=html; $("#overlay").classList.add("show"); }
+function closeSheet(){ $("#overlay").classList.remove("show"); }
+$("#overlay").addEventListener("click",e=>{ if(e.target.id==="overlay") closeSheet(); });
+
+function openRowEditor(id){
+  const isNew=id==null;
+  const r=isNew?makeRow({}):P.rows.find(x=>x.id===id);
+  if(!r) return;
+  const o=!isNew&&CHECK?CHECK.rows.get(r.id):null;
+  const f=(k,l)=>`<label class="fld">${l}<input type="text" data-f="${k}" value="${escapeHtml(r[k]||"")}"></label>`;
+  openSheet(`<h2>${isNew?"Thêm nhà":"Sửa nhà"}</h2>
+    ${o&&o.issues.length?`<ul class="issues" style="margin-bottom:8px">${o.issues.map(i=>`<li class="${i.lvl}">${escapeHtml(i.msg)}</li>`).join("")}</ul>`:""}
+    <div class="grid2">${f("duong","Tên đường / hẻm")}${f("soCu","Số nhà cũ")}${f("soMoi","Số nhà mới")}${f("toCu","Tờ bản đồ cũ")}${f("thuaCu","Thửa cũ")}${f("toMoi","Tờ bản đồ mới")}${f("thuaMoi","Thửa mới")}${f("toDP","Tổ dân phố")}${f("chuHo","Chủ hộ")}${f("ghiChu","Ghi chú")}</div>
+    <div class="row" style="margin-top:8px">
+      <label><input type="checkbox" data-f="gop" ${r.gop?"checked":""}> Gộp (nhiều nhà cũ/thửa → 1 số mới)</label>
+      <label><input type="checkbox" data-f="tach" ${r.tach?"checked":""}> Tách (1 nhà cũ/thửa → nhiều số mới)</label>
+    </div>
+    ${r.src?`<p class="muted">Nguồn: ${escapeHtml(r.src)}</p>`:""}
+    <div class="row" style="margin-top:10px"><button class="btn primary" id="edSave">Lưu</button><button class="btn" id="edCancel">Huỷ</button>${isNew?"":'<button class="btn danger" id="edDel">Xoá dòng</button>'}</div>`);
+  $("#edCancel").onclick=closeSheet;
+  $("#edSave").onclick=()=>{
+    $$("#sheet [data-f]").forEach(inp=>{ const k=inp.dataset.f; if(inp.type==="checkbox") r[k]=inp.checked; else { const v=inp.value.trim(); if(v!==r[k]) r.excelDate=(r.excelDate||[]).filter(x=>x!==k); r[k]=v; } });
+    if(isNew){ r.src="Nhập thủ công "+todayVN(); P.rows.push(r); }
+    closeSheet(); saveProject(); runChecks(); renderAll();
+  };
+  if(!isNew) $("#edDel").onclick=()=>{ if(!confirm("Xoá dòng này?")) return; P.rows=P.rows.filter(x=>x.id!==r.id); delete P.confirms["R|"+r.id]; closeSheet(); saveProject(); runChecks(); renderAll(); };
+}
+
+async function exportChecked(){
+  if(!CHECK) return;
+  const head=["Đường","Số cũ","Số mới","Tờ cũ","Thửa cũ","Tờ mới","Thửa mới","Tổ","Chủ hộ (bảng)","Gộp","Tách","Trạng thái","Vấn đề","Tin cậy","Xác nhận bởi","Ngày xác nhận","Ghi chú xác nhận","Số hộ đang ở","Nguồn"];
+  const label={ok:"Hợp lệ",warn:"Cần xem",err:"Lỗi",conf:"Đã xác nhận thực địa"};
+  const rows=[head].concat(P.rows.map(r=>{ const o=CHECK.rows.get(r.id); return [r.duong,r.soCu,r.soMoi,r.toCu,r.thuaCu,r.toMoi,r.thuaMoi,r.toDP,r.chuHo,r.gop?"x":"",r.tach?"x":"",label[o.status],o.issues.map(i=>i.msg).join(" | "),o.confidence,o.confirm?.by||"",o.confirm?.at||"",o.confirm?.note||"",HH.loaded?String(o.households.length):"",r.src]; }));
+  const sheets=[{name:CHECK.sum.final?"DA CHOT":"BAN NHAP",rows}];
+  if(CHECK.parcelIssues.length) sheets.push({name:"Thua can xem",rows:[["Bản đồ","Tờ","Thửa","Số nhà","Đường","Vấn đề","Xác nhận"]].concat(CHECK.parcelIssues.map(pi=>[pi.mt==="cu"?"Cũ":"Mới",pi.p.to,pi.p.thua,pi.p.soNha,pi.p.duong,pi.msg,pi.confirm?`${pi.confirm.by} ${pi.confirm.at}`:""]))});
+  downloadBlob(await buildXlsx(sheets), CHECK.sum.final?"so_nha_cu_moi_DA_CHOT.xlsx":"so_nha_cu_moi_BAN_NHAP.xlsx");
+}
+
+/* =====================================================================
+   PHẦN 8 — ĐỐI CHIẾU HỘ (giải mã giống hệt index.html, chỉ trong bộ nhớ)
+   ===================================================================== */
+const HH={loaded:false, data:null, groups:[], results:[], filter:"all"};
+const LEGACY_PBKDF2_ITERATIONS=100000;
+function b64ToBytes(b64){ const bin=atob(b64); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u; }
+async function deriveKey(password, salt, iterations){
+  const km=await crypto.subtle.importKey("raw",new TextEncoder().encode(password),{name:"PBKDF2"},false,["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations,hash:"SHA-256"},km,{name:"AES-GCM",length:256},false,["decrypt"]);
+}
+async function decryptJSON(key, ivB64, ctB64){
+  const buf=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64ToBytes(ivB64)},key,b64ToBytes(ctB64));
+  return JSON.parse(new TextDecoder().decode(buf));
+}
+function localBlob(){ try{ const v=localStorage.getItem(SECURITY_KEY); return v?JSON.parse(v):null; }catch(e){ return null; } }
+const LOAI_LABEL={HKTT:"Thường trú",Ko_du_dk_HKTT:"Chưa đủ ĐK HKTT",TamTru:"Tạm trú",Ko_du_dk_TamTru:"Chưa đủ ĐK tạm trú"};
+/* Gom hộ đúng như buildGroups()/householdKeyOf() trong index.html */
+function householdKeyOf(r){
+  if(r.loai==="HKTT"){ const h=(r.soHSCT||"").trim(); return h?"HKTT|HSCT|"+h:"HKTT|TEN|"+(r.hoTenChuHo||"").trim().toUpperCase(); }
+  if(r.loai==="TamTru") return "TamTru|"+(r.hoTenChuHo||"").trim().toUpperCase()+"|"+(r.noiTamTru||"").trim();
+  return null;
+}
+function buildHouseholds(records){
+  const out=[], map=new Map();
+  records.forEach(r=>{
+    const key=householdKeyOf(r);
+    if(key===null){ out.push({key:"P|"+out.length, loai:r.loai, chuHo:r.hoTen||"(không tên)", soHSCT:"", diaChi:r.noiOHienTai||r.noiThuongTru||r.noiTamTru||"", members:1, person:true}); return; }
+    if(!map.has(key)){ const g={key, loai:r.loai, chuHo:r.hoTenChuHo||r.hoTen||"(chưa rõ chủ hộ)", soHSCT:r.soHSCT||"", diaChi:r.loai==="HKTT"?(r.noiThuongTru||""):(r.noiTamTru||""), members:0}; map.set(key,g); out.push(g); }
+    map.get(key).members++;
+  });
+  return out;
+}
+async function unlockHouseholds(){
+  const pw=$("#hhPassword").value;
+  let blob=null; const pasted=$("#hhBackup").value.trim();
+  if(pasted){ try{ blob=JSON.parse(pasted); }catch(e){ $("#hhMsg").textContent="❌ Đoạn mã sao lưu không đúng định dạng"; return; } }
+  else blob=localBlob();
+  if(!blob||!blob.salt||!blob.iv||!blob.ct){ $("#hhMsg").textContent="⚠️ Không tìm thấy dữ liệu nhân hộ khẩu trên trình duyệt này — hãy dán bản sao lưu."; return; }
+  if(!pw){ $("#hhMsg").textContent="⚠️ Nhập mật khẩu"; return; }
+  $("#hhMsg").textContent="⏳ Đang giải mã (mất vài giây)...";
+  try{
+    const key=await deriveKey(pw, b64ToBytes(blob.salt), blob.iterations||LEGACY_PBKDF2_ITERATIONS);
+    const data=await decryptJSON(key, blob.iv, blob.ct);
+    HH.data=Array.isArray(data)?data:(data.records||[]);
+    HH.groups=buildHouseholds(HH.data); HH.loaded=true;
+    $("#hhPassword").value=""; $("#hhBackup").value="";
+    $("#btnHhLock").style.display="";
+    $("#hhMsg").textContent=`✅ Đã giải mã: ${HH.data.length} nhân khẩu, ${HH.groups.length} hộ/cá nhân.`;
+    runChecks(); renderAll();
+  }catch(e){ $("#hhMsg").textContent="❌ Sai mật khẩu hoặc bản sao lưu bị hỏng."; }
+}
+function lockHouseholds(){
+  HH.loaded=false; HH.data=null; HH.groups=[]; HH.results=[];
+  $("#btnHhLock").style.display="none"; $("#hhMsg").textContent="🔒 Đã xoá dữ liệu hộ khỏi bộ nhớ.";
+  if(CHECK) CHECK.rows.forEach(o=>o.households=[]);
+  renderAll();
+}
+const HH_CAT={
+  khopCu:["Đang ghi số CŨ → cần đổi sang số mới","warn"],
+  daMoi:["Đã dùng số MỚI","ok"],
+  khongDoi:["Số không đổi","ok"],
+  moHo:["MƠ HỒ: số này vừa là số cũ của nhà này vừa là số mới của nhà khác","err"],
+  nhieu:["Khớp nhiều nhà — cần xem","err"],
+  khongThay:["Không tìm thấy trong bảng số nhà","err"],
+  khongDoc:["Địa chỉ không đọc được số nhà","warn"],
+};
+function matchHouseholds(){
+  if(!CHECK) return;
+  CHECK.rows.forEach(o=>o.households=[]);
+  const I=[...CHECK.info.values()];
+  const streets=[...new Set(I.map(x=>x.st).filter(Boolean))];
+  const idx=(field)=>{ const m=new Map(); I.forEach(x=>{ const p=x[field]; if(!p.ok) return; [x.st+"|"+p.canon,"*|"+p.canon].forEach(k=>(m.get(k)||m.set(k,[]).get(k)).push(x)); }); return m; };
+  const byCu=idx("cu"), byMoi=idx("moi");
+  const matchStreet=(raw)=>{
+    const k=streetKey(raw); if(!k) return null;
+    if(streets.includes(k)) return k;
+    const c=streets.filter(s=>s&&(k.includes(s)||s.includes(k)));
+    return c.length===1?c[0]:null;
+  };
+  HH.results=HH.groups.map(g=>{
+    const sp=splitAddress(g.diaChi); const so=parseSoNha(sp.so);
+    const res={g, so:sp.so, street:sp.street, cat:"", rows:[], note:""};
+    if(!so.ok){ res.cat="khongDoc"; return res; }
+    let st=matchStreet(sp.street); let numOnly=false;
+    if(!st){ if(streets.length<=1) st=streets[0]||""; else { numOnly=true; } }
+    const key=(numOnly?"*":st)+"|"+so.canon;
+    const cu=byCu.get(key)||[], moi=byMoi.get(key)||[];
+    if(numOnly) res.note="Không nhận ra tên đường — chỉ khớp theo số";
+    const sameRow=cu.filter(x=>moi.includes(x));
+    if(cu.length&&moi.length){
+      if(sameRow.length && cu.length===1 && moi.length===1){ res.cat="khongDoi"; res.rows=sameRow; }
+      else { res.cat="moHo"; res.rows=[...new Set([...cu,...moi])]; }
+    }else if(cu.length){ res.cat=cu.length===1?"khopCu":"nhieu"; res.rows=cu; }
+    else if(moi.length){ res.cat=moi.length===1?"daMoi":"nhieu"; res.rows=moi; }
+    else res.cat="khongThay";
+    if(res.rows.length===1 && ["khopCu","daMoi","khongDoi"].includes(res.cat)) CHECK.rows.get(res.rows[0].r.id).households.push(g);
+    return res;
+  });
+}
+function renderHH(){
+  const lb=localBlob();
+  $("#hhSourceLocal").innerHTML=lb?"✅ Tìm thấy dữ liệu nhân hộ khẩu (đã mã hoá) trên trình duyệt này — chỉ cần nhập mật khẩu.":"Không thấy dữ liệu nhân hộ khẩu trên trình duyệt này (mở trang này cùng nơi với app nhân hộ khẩu, hoặc dán bản sao lưu bên dưới).";
+  if(!lb) $("#hhPasteBox").open=true;
+  const host=$("#hhResult");
+  if(!HH.loaded){ host.innerHTML=""; return; }
+  if(!P.rows.length){ host.innerHTML='<div class="card muted">Chưa có bảng số nhà — nạp ở bước 1.</div>'; return; }
+  const counts={}; HH.results.forEach(r=>counts[r.cat]=(counts[r.cat]||0)+1);
+  const unused=P.rows.filter(r=>{ const o=CHECK.rows.get(r.id); return o && !o.households.length; });
+  let h=`<div class="stats"><div class="stat ${HH.filter==="all"?"active":""}" data-hf="all"><b>${HH.results.length}</b><span>Tất cả hộ/cá nhân</span></div>`+
+    Object.entries(HH_CAT).filter(([k])=>counts[k]).map(([k,[l,lvl]])=>`<div class="stat ${HH.filter===k?"active":""}" data-hf="${k}"><b style="color:var(--${lvl==="err"?"red":lvl==="warn"?"amber":"green"})">${counts[k]}</b><span>${l}</span></div>`).join("")+
+    `<div class="stat ${HH.filter==="unused"?"active":""}" data-hf="unused"><b>${unused.length}</b><span>Số nhà trong bảng chưa có hộ nào</span></div></div>`;
+  h+=`<div class="card"><div class="row" style="margin-bottom:8px"><button class="btn small" id="btnHhExport">⬇️ Xuất Excel kết quả đối chiếu</button><span class="muted">File xuất có họ tên chủ hộ — giữ kín.</span></div><div class="tbl-wrap"><table>`;
+  if(HH.filter==="unused"){
+    h+=`<tr><th>Đường</th><th>Số cũ</th><th>Số mới</th><th>Thửa mới</th><th>Chủ hộ (bảng)</th></tr>`+unused.slice(0,500).map(r=>`<tr><td>${escapeHtml(r.duong)}</td><td>${escapeHtml(r.soCu)}</td><td><b>${escapeHtml(r.soMoi)}</b></td><td>${fmtThua(r.toMoi,r.thuaMoi)}</td><td>${escapeHtml(r.chuHo)}</td></tr>`).join("");
+  }else{
+    const list=HH.results.filter(r=>HH.filter==="all"||r.cat===HH.filter);
+    h+=`<tr><th>Chủ hộ</th><th>Loại</th><th>Số TV</th><th>Địa chỉ đang ghi</th><th>Kết quả</th><th>Số mới đúng</th></tr>`+list.slice(0,800).map(res=>{
+      const [l,lvl]=HH_CAT[res.cat];
+      const sug=res.rows.length===1?`<b>${escapeHtml(res.rows[0].r.soMoi)}</b> ${escapeHtml(res.rows[0].r.duong)}`:res.rows.map(x=>`${escapeHtml(x.r.soCu||"?")}→${escapeHtml(x.r.soMoi)}`).join("; ");
+      return `<tr class="st-${lvl==="ok"?"":lvl}"><td>${escapeHtml(res.g.chuHo)}${res.g.soHSCT?`<div class="muted" style="font-size:.72rem">HSCT ${escapeHtml(res.g.soHSCT)}</div>`:""}</td><td>${escapeHtml(LOAI_LABEL[res.g.loai]||res.g.loai||"")}</td><td>${res.g.members}</td><td>${escapeHtml(res.g.diaChi)}</td><td>${l}${res.note?`<div class="muted" style="font-size:.72rem">${escapeHtml(res.note)}</div>`:""}</td><td>${sug}</td></tr>`;
+    }).join("");
+  }
+  h+="</table></div></div>";
+  host.innerHTML=h;
+  $$("#hhResult [data-hf]").forEach(el=>el.addEventListener("click",()=>{HH.filter=el.dataset.hf; renderHH();}));
+  $("#btnHhExport").addEventListener("click",exportHH);
+}
+async function exportHH(){
+  const rows=[["Chủ hộ","Số HSCT","Loại","Số thành viên","Địa chỉ đang ghi","Số nhà đọc được","Đường đọc được","Kết quả","Số cũ (bảng)","Số mới (bảng)","Đường (bảng)","Thửa mới","Ghi chú"]]
+    .concat(HH.results.map(res=>{ const x=res.rows.length===1?res.rows[0].r:null; return [res.g.chuHo,res.g.soHSCT,LOAI_LABEL[res.g.loai]||res.g.loai||"",String(res.g.members),res.g.diaChi,res.so,res.street,HH_CAT[res.cat][0],x?x.soCu:res.rows.map(y=>y.r.soCu).join("; "),x?x.soMoi:res.rows.map(y=>y.r.soMoi).join("; "),x?x.duong:"",x?(parseThua(x.toMoi,x.thuaMoi).key||""):"",res.note]; }));
+  const unused=P.rows.filter(r=>!CHECK.rows.get(r.id).households.length);
+  downloadBlob(await buildXlsx([{name:"Doi chieu ho",rows},{name:"So nha chua co ho",rows:[["Đường","Số cũ","Số mới","Tờ mới","Thửa mới"]].concat(unused.map(r=>[r.duong,r.soCu,r.soMoi,r.toMoi,r.thuaMoi]))}]),"doi_chieu_ho_so_nha.xlsx");
+}
+
+/* =====================================================================
+   PHẦN 9 — VẼ BẢN ĐỒ (SVG)
+   Mỗi đường / hẻm là một "dải": lẻ một bên, chẵn một bên, xếp theo số mới.
+   Hẻm có đường nối nét đứt về đúng căn nhà đầu hẻm trên tuyến cha.
+   ===================================================================== */
+const SVGNS="http://www.w3.org/2000/svg";
+const CW=78, CH=58, TITLE=24, ROAD=20, PAD=8;
+let VIEW={x:-20,y:-20,w:1200,h:800};
+let MAP_GROUPS=[];
+function el(tag, attrs, parent){ const e=document.createElementNS(SVGNS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); if(parent) parent.appendChild(e); return e; }
+function buildMapGroups(){
+  const groups=new Map();
+  const ensure=(key,label,parentKey,anchor,depth)=>{ if(!groups.has(key)) groups.set(key,{key,label,parentKey,anchor,depth,houses:[]}); return groups.get(key); };
+  let skipped=0;
+  CHECK.info.forEach(x=>{
+    if(!x.moi.ok){ skipped++; return; }
+    const stName=CHECK.streets.get(x.st)||x.r.duong||"(chưa rõ đường)";
+    ensure(x.st, stName, null, null, 0);
+    if(x.moi.parts.length<=1){ groups.get(x.st).houses.push(x); return; }
+    let parentKey=x.st;
+    for(let d=1; d<x.moi.parts.length; d++){
+      const pre=x.moi.parts.slice(0,d).map(p=>p.n+p.s).join("/");
+      const key=x.st+"|"+pre;
+      ensure(key, `Hẻm ${pre} ${stName}`, parentKey, pre, d);
+      parentKey=key;
+    }
+    groups.get(parentKey).houses.push(x);
+  });
+  const list=[...groups.values()];
+  list.forEach(g=>{
+    g.houses.sort((a,b)=>cmpSoNha(a.moi,b.moi));
+    g.odd=g.houses.filter(x=>lastPart(x.moi).n%2===1);
+    g.even=g.houses.filter(x=>lastPart(x.moi).n%2===0);
+    g.width=Math.max(g.odd.length,g.even.length,3)*CW+PAD*2;
+    g.height=TITLE+CH+ROAD+CH+PAD;
+  });
+  // thứ tự: mỗi đường rồi tới các hẻm của nó (duyệt sâu), hẻm xếp theo số đầu hẻm
+  const children=new Map(); list.forEach(g=>{ if(g.parentKey){ (children.get(g.parentKey)||children.set(g.parentKey,[]).get(g.parentKey)).push(g); } });
+  children.forEach(arr=>arr.sort((a,b)=>cmpSoNha(parseSoNha(a.anchor),parseSoNha(b.anchor))));
+  const ordered=[]; const visit=g=>{ ordered.push(g); (children.get(g.key)||[]).forEach(visit); };
+  list.filter(g=>!g.parentKey).sort((a,b)=>a.label.localeCompare(b.label,"vi")).forEach(visit);
+  MAP_GROUPS=ordered;
+  return {groups:ordered, skipped};
+}
+function defaultLayout(){
+  let y=0; const out={};
+  MAP_GROUPS.forEach(g=>{ out[g.key]={x:g.depth*60, y, rot:0}; y+=g.height+(g.depth?26:44); });
+  return out;
+}
+function groupPos(g){ return P.layout[g.key]||(P.layout[g.key]=defaultLayout()[g.key]||{x:0,y:0,rot:0}); }
+function placeNewGroups(){
+  const missing=MAP_GROUPS.filter(g=>!P.layout[g.key]);
+  if(!missing.length) return;
+  const placed=MAP_GROUPS.filter(g=>P.layout[g.key]);
+  if(!placed.length){ P.layout=defaultLayout(); saveProject(); return; }
+  let y=Math.max(...placed.map(g=>P.layout[g.key].y+g.height))+60;
+  missing.forEach(g=>{ P.layout[g.key]={x:g.depth*60,y,rot:0}; y+=g.height+(g.depth?26:44); });
+  saveProject();
+}
+function cellCenterLocal(g, x){
+  let i=g.odd.indexOf(x); if(i>=0) return {x:PAD+i*CW+CW/2, y:TITLE+CH/2};
+  i=g.even.indexOf(x); if(i>=0) return {x:PAD+i*CW+CW/2, y:TITLE+CH+ROAD+CH/2};
+  return {x:PAD, y:TITLE+CH+ROAD/2};
+}
+function toWorld(g, pt){
+  const p=groupPos(g); const a=(p.rot||0)*Math.PI/180;
+  return {x:p.x+pt.x*Math.cos(a)-pt.y*Math.sin(a), y:p.y+pt.x*Math.sin(a)+pt.y*Math.cos(a)};
+}
+const STATUS_FILL={ok:"#e8f5ec",warn:"#fff4d6",err:"#fde2df",conf:"#e3edf8"};
+const STATUS_STROKE={ok:"#2f7d4f",warn:"#b5820a",err:"#c0392b",conf:"#2c5d8f"};
+let highlightIds=new Set();
+function renderMap(){
+  const svg=$("#mapSvg"); svg.innerHTML="";
+  const banner=$("#mapBanner");
+  if(!CHECK||!P.rows.length){ banner.innerHTML='<div class="banner info">Chưa có dữ liệu — nạp bảng số nhà ở bước 1.</div>'; return; }
+  const {groups, skipped}=buildMapGroups();
+  placeNewGroups();
+  renderFinalBanner(banner);
+  if(skipped) banner.insertAdjacentHTML("beforeend",`<div class="banner info">${skipped} dòng không vẽ được vì số mới trống hoặc không đọc được — sửa ở tab Kiểm tra.</div>`);
+  const L=P.labels;
+  const style=el("style",{},svg);
+  style.textContent=`.t-moi{font:700 15px Arial,sans-serif;fill:#132840}.t-cu{font:11px Arial,sans-serif;fill:#6b7787}.t-thua{font:10px Arial,sans-serif;fill:#2c5d8f}.t-title{font:700 13px Arial,sans-serif;fill:#fff}.t-road{font:italic 11px Arial,sans-serif;fill:#555}.t-hh{font:700 10px Arial,sans-serif;fill:#fff}.t-stamp{font:700 18px Arial,sans-serif}.cell{cursor:pointer}.drag{cursor:move}`;
+  const root=el("g",{id:"mapRoot"},svg);
+  el("rect",{x:-100000,y:-100000,width:200000,height:200000,fill:"#fafbfc",id:"mapBg"},root);
+  const byKey=new Map(groups.map(g=>[g.key,g]));
+  groups.forEach(g=>{
+    const p=groupPos(g);
+    const G=el("g",{transform:`translate(${p.x},${p.y}) rotate(${p.rot||0})`,"data-g":g.key},root);
+    el("rect",{x:0,y:0,width:g.width,height:g.height,rx:8,fill:"#fff",stroke:"#c9d2dc"},G);
+    const tb=el("rect",{x:0,y:0,width:g.width,height:TITLE,rx:8,fill:g.depth?"#3d6a99":"#1e3a5f",class:"drag","data-drag":g.key},G);
+    el("rect",{x:0,y:TITLE-8,width:g.width,height:8,fill:tb.getAttribute("fill"),class:"drag","data-drag":g.key},G);
+    const tt=el("text",{x:10,y:16,class:"t-title drag","data-drag":g.key},G); tt.textContent=`${g.label}  (${g.houses.length} nhà)`;
+    const rotBtn=el("text",{x:g.width-20,y:17,class:"t-title","data-rot":g.key,style:"cursor:pointer"},G); rotBtn.textContent="⟳";
+    el("rect",{x:PAD,y:TITLE+CH,width:g.width-PAD*2,height:ROAD,fill:"#e9ecef"},G);
+    const rd=el("text",{x:PAD+6,y:TITLE+CH+14,class:"t-road"},G); rd.textContent=g.width>420?`↑ số lẻ · ${g.label} · số chẵn ↓`:"↑ lẻ · chẵn ↓";
+    const drawCell=(x,i,top)=>{
+      const o=CHECK.rows.get(x.r.id);
+      const cx=PAD+i*CW, cy=top?TITLE:TITLE+CH+ROAD;
+      const C=el("g",{class:"cell","data-row":x.r.id},G);
+      const hasHH=HH.loaded&&L.hh?o.households.length:null;
+      el("rect",{x:cx+2,y:cy+2,width:CW-4,height:CH-4,rx:4,fill:STATUS_FILL[o.status],stroke:highlightIds.has(x.r.id)?"#e67e00":STATUS_STROKE[o.status],"stroke-width":highlightIds.has(x.r.id)?4:1.3,"stroke-dasharray":hasHH===0?"4 3":""},C);
+      let ty=cy+18;
+      if(L.cu){ const t=el("text",{x:cx+CW/2,y:ty-4,"text-anchor":"middle",class:"t-cu"},C); t.textContent=x.r.soCu?`cũ: ${x.r.soCu}`:"cũ: —"; }
+      if(L.moi){ const t=el("text",{x:cx+CW/2,y:ty+15,"text-anchor":"middle",class:"t-moi"},C); t.textContent=x.moi.canon; if(x.moi.canon.length>7) t.setAttribute("style","font-size:12px"); }
+      if(L.thua){ const k=x.pNew.key||x.pOld.key; if(k){ const t=el("text",{x:cx+CW/2,y:cy+CH-8,"text-anchor":"middle",class:"t-thua"},C); t.textContent=`T${k}`; } }
+      if(hasHH){ el("circle",{cx:cx+CW-11,cy:cy+11,r:7,fill:"#2f7d4f"},C); const t=el("text",{x:cx+CW-11,y:cy+14.5,"text-anchor":"middle",class:"t-hh"},C); t.textContent=hasHH; }
+      const tip=el("title",{},C); tip.textContent=`${x.r.duong}\nSố cũ: ${x.r.soCu||"—"} → Số mới: ${x.r.soMoi}\nThửa cũ: ${x.pOld.key||"—"} · Thửa mới: ${x.pNew.key||"—"}\n${o.issues.map(i=>"• "+i.msg).join("\n")}`;
+    };
+    g.odd.forEach((x,i)=>drawCell(x,i,true));
+    g.even.forEach((x,i)=>drawCell(x,i,false));
+  });
+  // đường nối hẻm -> nhà đầu hẻm (vẽ trên cùng, không chặn thao tác bấm)
+  const links=el("g",{"pointer-events":"none"},root);
+  groups.forEach(g=>{
+    if(!g.parentKey) return;
+    const parent=byKey.get(g.parentKey); if(!parent) return;
+    const anchorSo=parseSoNha(g.anchor);
+    const anchorHouse=parent.houses.find(x=>x.moi.canon===anchorSo.canon);
+    let from;
+    if(anchorHouse) from=toWorld(parent, cellCenterLocal(parent, anchorHouse));
+    else { // nhà đầu hẻm không có trong bảng: ước lượng vị trí theo số
+      const n=lastPart(anchorSo).n; const side=n%2?parent.odd:parent.even;
+      let i=side.findIndex(x=>cmpSoNha(x.moi,anchorSo)>0); if(i<0) i=side.length;
+      from=toWorld(parent,{x:PAD+i*CW, y:n%2?TITLE+CH/2:TITLE+CH+ROAD+CH/2});
+    }
+    const to=toWorld(g,{x:0,y:TITLE/2});
+    el("path",{d:`M${from.x},${from.y} C${from.x},${(from.y+to.y)/2} ${to.x-40},${to.y} ${to.x},${to.y}`,fill:"none",stroke:"#3d6a99","stroke-width":2,"stroke-dasharray":"6 4"},links);
+    el("circle",{cx:from.x,cy:from.y,r:4,fill:anchorHouse?"#3d6a99":"#c0392b"},links);
+  });
+  applyView();
+}
+function contentBBox(){
+  let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+  MAP_GROUPS.forEach(g=>{
+    [[0,0],[g.width,0],[0,g.height],[g.width,g.height]].forEach(([a,b])=>{ const w=toWorld(g,{x:a,y:b}); minX=Math.min(minX,w.x); minY=Math.min(minY,w.y); maxX=Math.max(maxX,w.x); maxY=Math.max(maxY,w.y); });
+  });
+  if(!isFinite(minX)) return {x:0,y:0,w:800,h:600};
+  return {x:minX-30,y:minY-60,w:maxX-minX+60,h:maxY-minY+90};
+}
+function applyView(){ $("#mapSvg").setAttribute("viewBox",`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`); }
+function fitView(){
+  const b=contentBBox(); const svg=$("#mapSvg"); const r=svg.getBoundingClientRect();
+  const ar=(r.width||1000)/(r.height||700);
+  if(b.w/b.h>ar){ VIEW={x:b.x,y:b.y-(b.w/ar-b.h)/2,w:b.w,h:b.w/ar}; } else { VIEW={x:b.x-(b.h*ar-b.w)/2,y:b.y,w:b.h*ar,h:b.h}; }
+  applyView();
+}
+function zoom(f, cx, cy){
+  if(cx==null){ cx=VIEW.x+VIEW.w/2; cy=VIEW.y+VIEW.h/2; }
+  VIEW={x:cx-(cx-VIEW.x)*f, y:cy-(cy-VIEW.y)*f, w:VIEW.w*f, h:VIEW.h*f}; applyView();
+}
+function svgPoint(evt){ const svg=$("#mapSvg"); const pt=svg.createSVGPoint(); pt.x=evt.clientX; pt.y=evt.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+(function wireMap(){
+  const svg=$("#mapSvg");
+  let drag=null;
+  svg.addEventListener("pointerdown",e=>{
+    const t=e.target;
+    if(t.dataset&&t.dataset.rot){ const p=P.layout[t.dataset.rot]; p.rot=((p.rot||0)+90)%360; saveProject(); renderMap(); return; }
+    const start=svgPoint(e);
+    if(t.dataset&&t.dataset.drag){ const p=groupPos({key:t.dataset.drag}); drag={mode:"group",key:t.dataset.drag,start,orig:{...p},moved:false}; }
+    else { const cell=t.closest&&t.closest("[data-row]"); drag={mode:"pan",start:{x:e.clientX,y:e.clientY},orig:{...VIEW},moved:false,cell:cell?+cell.dataset.row:null}; }
+    svg.setPointerCapture(e.pointerId);
+  });
+  svg.addEventListener("pointermove",e=>{
+    if(!drag) return;
+    if(drag.mode==="group"){
+      const p=svgPoint(e); const L=P.layout[drag.key];
+      L.x=drag.orig.x+(p.x-drag.start.x); L.y=drag.orig.y+(p.y-drag.start.y); drag.moved=true;
+      const G=svg.querySelector(`[data-g="${CSS.escape(drag.key)}"]`); if(G) G.setAttribute("transform",`translate(${L.x},${L.y}) rotate(${L.rot||0})`);
+    }else{
+      const r=svg.getBoundingClientRect(); const sx=VIEW.w/r.width;
+      const dx=e.clientX-drag.start.x, dy=e.clientY-drag.start.y;
+      if(Math.abs(dx)+Math.abs(dy)>4) drag.moved=true;
+      VIEW.x=drag.orig.x-dx*sx; VIEW.y=drag.orig.y-dy*sx; applyView();
+    }
+  });
+  const end=()=>{
+    if(!drag) return;
+    if(drag.mode==="group"&&drag.moved){ saveProject(); renderMap(); }
+    if(drag.mode==="pan"&&!drag.moved&&drag.cell!=null) openRowEditor(drag.cell);
+    drag=null;
+  };
+  svg.addEventListener("pointerup",end); svg.addEventListener("pointercancel",()=>{drag=null;});
+  svg.addEventListener("wheel",e=>{ e.preventDefault(); const p=svgPoint(e); zoom(e.deltaY>0?1.15:1/1.15,p.x,p.y); },{passive:false});
+})();
+function mapSearch(){
+  const q=$("#mapSearch").value.trim(); highlightIds=new Set();
+  if(q&&CHECK){
+    const so=parseSoNha(q); const tk=parseThua("",q).key||q.replace(/\s+/g,"");
+    CHECK.info.forEach(x=>{ if((so.ok&&((x.moi.ok&&x.moi.canon===so.canon)||(x.cu.ok&&x.cu.canon===so.canon)))||x.pNew.key===tk||x.pOld.key===tk) highlightIds.add(x.r.id); });
+  }
+  renderMap();
+  if(highlightIds.size){
+    const id=[...highlightIds][0]; const g=MAP_GROUPS.find(g=>g.houses.some(x=>x.r.id===id)); const x=g.houses.find(x=>x.r.id===id);
+    const c=toWorld(g,cellCenterLocal(g,x)); VIEW={x:c.x-350,y:c.y-220,w:700,h:440}; applyView();
+    showToast(`Tìm thấy ${highlightIds.size} nhà (viền cam)`);
+  }else if(q) showToast("Không tìm thấy");
+}
+function exportSvgString(){
+  const b=contentBBox();
+  const clone=$("#mapSvg").cloneNode(true);
+  clone.setAttribute("viewBox",`${b.x} ${b.y} ${b.w} ${b.h}`);
+  clone.setAttribute("width",Math.round(b.w)); clone.setAttribute("height",Math.round(b.h));
+  clone.querySelectorAll("[data-rot]").forEach(n=>n.remove());
+  const bg=clone.querySelector("#mapBg"); if(bg){ bg.setAttribute("x",b.x); bg.setAttribute("y",b.y); bg.setAttribute("width",b.w); bg.setAttribute("height",b.h); bg.setAttribute("fill","#ffffff"); }
+  const s=CHECK.sum;
+  const stamp=document.createElementNS(SVGNS,"text");
+  stamp.setAttribute("x",b.x+20); stamp.setAttribute("y",b.y+32); stamp.setAttribute("class","t-stamp");
+  stamp.setAttribute("fill",s.final?"#2f7d4f":"#c0392b");
+  stamp.textContent=s.final?`BẢN ĐỒ SỐ NHÀ CŨ – MỚI · ĐÃ CHỐT ${todayVN()} · ${s.total} nhà`:`BẢN NHÁP ${todayVN()} · còn ${s.err} lỗi, ${s.warn} cần xem${s.parcelOpen?`, ${s.parcelOpen} thửa`:""} · ${s.total} nhà`;
+  clone.querySelector("#mapRoot").appendChild(stamp);
+  return {svg:'<?xml version="1.0" encoding="UTF-8"?>\n'+new XMLSerializer().serializeToString(clone), b};
+}
+function exportSvg(){ if(!CHECK||!P.rows.length) return; const {svg}=exportSvgString(); downloadBlob(new Blob([svg],{type:"image/svg+xml"}), CHECK.sum.final?"ban_do_so_nha_DA_CHOT.svg":"ban_do_so_nha_BAN_NHAP.svg"); }
+function exportPng(){
+  if(!CHECK||!P.rows.length) return;
+  const {svg,b}=exportSvgString();
+  const scale=Math.min(2, 16000/Math.max(b.w,b.h));
+  const img=new Image();
+  img.onload=()=>{
+    const c=document.createElement("canvas"); c.width=Math.round(b.w*scale); c.height=Math.round(b.h*scale);
+    const ctx=c.getContext("2d"); ctx.fillStyle="#fff"; ctx.fillRect(0,0,c.width,c.height); ctx.drawImage(img,0,0,c.width,c.height);
+    c.toBlob(bl=>downloadBlob(bl, CHECK.sum.final?"ban_do_so_nha_DA_CHOT.png":"ban_do_so_nha_BAN_NHAP.png"),"image/png");
+  };
+  img.onerror=()=>showToast("⚠️ Không tạo được ảnh PNG — dùng SVG thay thế");
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+function printMap(){
+  if(!CHECK||!P.rows.length) return;
+  const {svg}=exportSvgString();
+  const holder=document.createElement("div"); holder.id="printHolder"; holder.innerHTML=svg.replace(/^<\?xml[^>]*>/,"");
+  const s=holder.querySelector("svg"); s.removeAttribute("width"); s.removeAttribute("height"); s.style.width="100%"; s.style.height="auto";
+  const wrap=$("#mapWrap"); const old=$("#mapSvg"); old.style.display="none"; wrap.appendChild(holder);
+  document.body.classList.add("print-map");
+  const done=()=>{ document.body.classList.remove("print-map"); holder.remove(); old.style.display=""; window.removeEventListener("afterprint",done); };
+  window.addEventListener("afterprint",done);
+  window.print();
+  setTimeout(()=>{ if(document.body.classList.contains("print-map")) done(); },1500);
+}
+
+/* =====================================================================
+   PHẦN 10 — KẾT NỐI GIAO DIỆN
+   ===================================================================== */
+let currentTab="import";
+function showTab(name){
+  currentTab=name;
+  $$("nav.tabs button").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+  $$("section.tab").forEach(s=>s.classList.toggle("active",s.id==="tab-"+name));
+  if(name==="map"){ renderMap(); if(!P._fitted){ fitView(); P._fitted=true; } }
+}
+function renderImportSummary(){
+  const el=$("#importSummary");
+  if(!P.rows.length){ el.innerHTML='<h2>Dữ liệu hiện có</h2><p class="muted">Chưa có bảng số nhà.</p>'; return; }
+  const withParcel=P.rows.filter(r=>parseThua(r.toMoi,r.thuaMoi).key||parseThua(r.toCu,r.thuaCu).key).length;
+  el.innerHTML=`<h2>Dữ liệu hiện có</h2><p>${P.rows.length} nhà · ${CHECK?CHECK.streets.size:0} tuyến · ${withParcel} nhà có số thửa${P.sourceName?` · nguồn: ${escapeHtml(P.sourceName)}`:""}</p>
+    ${CHECK?`<p>${statusPill("err")} ${CHECK.sum.err} &nbsp; ${statusPill("warn")} ${CHECK.sum.warn} &nbsp; ${statusPill("conf")} ${CHECK.sum.conf} &nbsp; ${statusPill("ok")} ${CHECK.sum.ok}</p>`:""}
+    <button class="btn primary" onclick="showTab('check')">Xem kết quả kiểm tra →</button>`;
+  const pc={cu:P.parcels.filter(p=>p.map==="cu").length, moi:P.parcels.filter(p=>p.map==="moi").length};
+  const pcx=P.parcelComplete||(P.parcelComplete={cu:false,moi:false});
+  $("#parcelSummary").innerHTML=(pc.cu||pc.moi)?`Đã nạp: ${pc.moi} thửa bản đồ mới, ${pc.cu} thửa bản đồ cũ. <button class="btn small danger" id="btnClearParcels">Xoá danh sách thửa</button>
+    ${["moi","cu"].filter(k=>pc[k]).map(k=>`<div><label><input type="checkbox" data-pcomplete="${k}" ${pcx[k]?"checked":""}> Danh sách thửa bản đồ ${k==="cu"?"cũ":"mới"} là ĐẦY ĐỦ cả khu phố (báo những nhà có thửa không nằm trong danh sách)</label></div>`).join("")}`:"";
+  $$("#parcelSummary [data-pcomplete]").forEach(c=>c.addEventListener("change",()=>{ pcx[c.dataset.pcomplete]=c.checked; saveProject(); runChecks(); renderAll(); }));
+  $("#btnClearParcels")?.addEventListener("click",()=>{ if(confirm("Xoá toàn bộ danh sách thửa đã nạp?")){ P.parcels=[]; saveProject(); runChecks(); renderAll(); } });
+}
+function renderProjectInfo(){ $("#projInfo").textContent=P.savedAt?`Lưu lần cuối trên máy này: ${P.savedAt} · ${P.rows.length} nhà · ${Object.keys(P.confirms).length} xác nhận`:"Chưa có dữ liệu được lưu."; }
+function renderAll(){
+  renderImportSummary(); renderCheck(); renderHH(); renderProjectInfo();
+  if(currentTab==="map") renderMap();
+  ["moi","cu","thua","hh"].forEach(k=>{ $("#lbl"+k[0].toUpperCase()+k.slice(1)).checked=P.labels[k]!==false; });
+}
+
+$$("nav.tabs button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+$("#fileMain").addEventListener("change",async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{ const sheets=await readTableFile(f); renderMapper("main",sheets,f.name); }catch(err){ showToast("❌ "+err.message); }
+  e.target.value="";
+});
+$("#fileParcel").addEventListener("change",async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{ const sheets=await readTableFile(f); renderMapper("parcel",sheets,f.name); }catch(err){ showToast("❌ "+err.message); }
+  e.target.value="";
+});
+$("#btnTemplate").addEventListener("click",downloadTemplate);
+$("#btnAddRow").addEventListener("click",()=>openRowEditor(null));
+$("#checkSearch").addEventListener("input",()=>{checkLimit=200; renderCheck();});
+$("#checkStreet").addEventListener("change",()=>{checkLimit=200; renderCheck();});
+$("#checkMore").addEventListener("click",()=>{checkLimit+=300; renderCheck();});
+$("#btnExportChecked").addEventListener("click",exportChecked);
+$("#btnHhUnlock").addEventListener("click",unlockHouseholds);
+$("#hhPassword").addEventListener("keydown",e=>{ if(e.key==="Enter") unlockHouseholds(); });
+$("#btnHhLock").addEventListener("click",lockHouseholds);
+$("#hhBackupFile").addEventListener("change",async e=>{ const f=e.target.files[0]; if(f) $("#hhBackup").value=(await f.text()).trim(); e.target.value=""; });
+["Moi","Cu","Thua","Hh"].forEach(k=>$("#lbl"+k).addEventListener("change",e=>{ P.labels[k.toLowerCase()]=e.target.checked; saveProject(); renderMap(); }));
+$("#mapSearch").addEventListener("keydown",e=>{ if(e.key==="Enter") mapSearch(); });
+$("#mapZoomIn").addEventListener("click",()=>zoom(1/1.3));
+$("#mapZoomOut").addEventListener("click",()=>zoom(1.3));
+$("#mapFit").addEventListener("click",fitView);
+$("#mapResetLayout").addEventListener("click",()=>{ if(!confirm("Xếp lại toàn bộ bản đồ về vị trí mặc định? Cách bố trí đã kéo thả sẽ mất.")) return; P.layout={}; buildMapGroups(); P.layout=defaultLayout(); saveProject(); renderMap(); fitView(); });
+$("#mapSvgBtn").addEventListener("click",exportSvg);
+$("#mapPngBtn").addEventListener("click",exportPng);
+$("#mapPrintBtn").addEventListener("click",printMap);
+$("#btnProjExport").addEventListener("click",()=>{ const o={...P}; delete o._fitted; downloadBlob(new Blob([JSON.stringify(o,null,1)],{type:"application/json"}),`du_an_ban_do_so_nha_${new Date().toISOString().slice(0,10)}.json`); });
+$("#fileProj").addEventListener("change",async e=>{
+  const f=e.target.files[0]; if(!f) return;
+  try{ const o=JSON.parse(await f.text()); if(!o||o.version!==1||!Array.isArray(o.rows)) throw new Error("File không phải dự án bản đồ số nhà");
+    if(P.rows.length && !confirm("Thay dự án hiện có trên máy này bằng file vừa chọn?")) return;
+    P=Object.assign(newProject(),o); saveProject(); runChecks(); renderAll(); showToast("✅ Đã nhập dự án");
+  }catch(err){ showToast("❌ "+err.message); }
+  e.target.value="";
+});
+$("#btnProjClear").addEventListener("click",()=>{ if(!confirm("Xoá toàn bộ bảng số nhà, danh sách thửa, xác nhận và bố trí bản đồ trên máy này?")) return; P=newProject(); try{ localStorage.removeItem(PROJECT_KEY); }catch(e){} runChecks(); renderAll(); });
+
+loadProject();
+runChecks();
+renderAll();
+</script>
+</body>
+</html>
